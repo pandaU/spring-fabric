@@ -23,8 +23,6 @@ public class FabricBlock extends FabricIdentity {
 
 	private int transactionCount;
 
-	private String chaincode;
-
 	/**
 	 * Query context transaction id, @see {@link FabricHistory}
 	 */
@@ -49,6 +47,7 @@ public class FabricBlock extends FabricIdentity {
 		} catch (InvalidProtocolBufferException e) {
 //			e.printStackTrace();
 		}
+		block.setCurrentHash(FabricUtil.hashToString(blockInfo.getDataHash()));
 		block.setDataHash(FabricUtil.hashToString(blockInfo.getDataHash()));
 		block.setTransactionCount(blockInfo.getTransactionCount());
 

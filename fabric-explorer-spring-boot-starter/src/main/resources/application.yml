@@ -10,9 +10,13 @@ spring:
     name: xxzx-fabric
     gateway:
       wallet:
+        caUrl: https://ca.org1.xxzx.com:7054
+        caFile: peerConfig/ca.org1.xxzx.com-cert.pem
+        cahost: ca.org1.xxzx.com
+        caMSP: Org1MSP
         identify: admin.id
         file: C:\Users\MSI\Desktop\spring-fabric-gateway-master\fabric-explorer-spring-boot-starter\wallet
-        memory: false
+        memory: true
     network:
       file: peerConfig\connection-org1.yaml
       name: fabric network name

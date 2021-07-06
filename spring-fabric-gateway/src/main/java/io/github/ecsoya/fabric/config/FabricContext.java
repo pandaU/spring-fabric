@@ -3,6 +3,9 @@ package io.github.ecsoya.fabric.config;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +30,13 @@ import org.hyperledger.fabric.sdk.BlockInfo.EnvelopeType;
 import org.hyperledger.fabric.sdk.BlockInfo.TransactionEnvelopeInfo;
 import org.hyperledger.fabric.sdk.NetworkConfig.OrgInfo;
 import org.hyperledger.fabric.sdk.NetworkConfig.UserInfo;
+import org.hyperledger.fabric.sdk.exception.CryptoException;
+import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
+import org.hyperledger.fabric.sdk.security.CryptoSuite;
+import org.hyperledger.fabric.sdk.security.CryptoSuiteFactory;
+import org.hyperledger.fabric_ca.sdk.EnrollmentRequest;
+import org.hyperledger.fabric_ca.sdk.HFCAClient;
+import org.hyperledger.fabric_ca.sdk.exception.EnrollmentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +57,8 @@ import io.github.ecsoya.fabric.gateway.FabricContract;
 
 public class FabricContext {
 	private Logger logger = LoggerFactory.getLogger(FabricContext.class);
+
+	private static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().contains("win");
 
 	private final FabricProperties properties;
 
@@ -227,12 +239,38 @@ public class FabricContext {
 						}
 						logger.debug("Initialize Wallet " + identityName);
 					}
+				}else {
+					try {
+						Enrollment enrollment = adminEnroll(walletProps.getCaUrl(), walletProps.getCaFile(), walletProps.getCaHost(), walletProps.getIdentity(), walletProps.getIdentityPw());
+						Identity admin = Identities.newX509Identity(walletProps.getCaMSP(), enrollment);
+						wallet.put(identityName, admin);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
 		return wallet;
 	}
-
+    private Enrollment adminEnroll(String caUrl, String file, String host, String user, String userPw) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, CryptoException, InvalidArgumentException, EnrollmentException, org.hyperledger.fabric_ca.sdk.exception.InvalidArgumentException {
+		Properties props = new Properties();
+		String path = Thread.currentThread().getContextClassLoader().getResource(file).getPath();
+		if (IS_WIN){
+			path = path.substring(1);
+		}
+		props.put("pemFile",
+				path);
+		props.put("allowAllHostNames", "true");
+		HFCAClient caClient = HFCAClient.createNewInstance(caUrl, props);
+		CryptoSuite cryptoSuite = CryptoSuiteFactory.getDefault().getCryptoSuite();
+		caClient.setCryptoSuite(cryptoSuite);
+		// Enroll he admin user, and import the new identity into the wallet.
+		final EnrollmentRequest enrollmentRequestTLS = new EnrollmentRequest();
+		enrollmentRequestTLS.addHost(host);
+		enrollmentRequestTLS.setProfile("tls");
+		Enrollment enrollment = caClient.enroll(user, userPw, enrollmentRequestTLS);
+		return enrollment;
+	}
 	private FabricContract getContract() {
 		if (contract == null) {
 			if (network == null) {

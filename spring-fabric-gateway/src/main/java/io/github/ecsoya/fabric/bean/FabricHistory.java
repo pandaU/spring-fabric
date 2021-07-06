@@ -46,7 +46,6 @@ public class FabricHistory {
 			return;
 		}
 		block = FabricBlock.create(blockInfo);
-
 		block.setCurrentTxId(txId);
 		block.setCurrentTxTimestamp(timestamp);
 	}

@@ -6,6 +6,7 @@ import org.hyperledger.fabric.gateway.impl.identity.FileSystemWalletStore;
 import org.hyperledger.fabric.gateway.impl.identity.InMemoryWalletStore;
 
 import lombok.Data;
+import org.omg.CORBA.PRIVATE_MEMBER;
 
 /**
  * The wallet configuration of fabric gateway.
@@ -37,4 +38,13 @@ public class FabricWalletProperties {
 	 */
 	private String identity = "admin";
 
+	private String identityPw = "adminpw";
+
+	private String caUrl;
+
+	private String caFile;
+
+	private String caHost;
+
+    private String caMSP = "Org1MSP";
 }

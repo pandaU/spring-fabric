@@ -37,6 +37,7 @@ public class FabricProperties {
 	 */
 	private int peers;
 
+
 	/**
 	 * The gateway configuration of fabric.
 	 */
