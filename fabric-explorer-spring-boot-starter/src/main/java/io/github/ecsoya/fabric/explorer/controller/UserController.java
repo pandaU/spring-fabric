@@ -15,6 +15,7 @@ import io.github.ecsoya.fabric.service.IFabricObjectService;
 import io.github.ecsoya.fabric.service.IFabricService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,13 +57,26 @@ public class UserController {
     }
 
     @GetMapping("user")
-    public ResponseEntity<?> list(@RequestParam(required = false) String id,@RequestParam(required = false)Integer age,@RequestParam(required = false)String name,Integer pageSize ,@RequestParam(required = false,defaultValue = "")String mark){
+    public ResponseEntity<?> list(@RequestParam(required = false) String id,@RequestParam(required = false)Integer age,@RequestParam(required = false)String name,Integer pageSize ,@RequestParam(required = false,defaultValue = "")String bookmark){
         FabricPaginationQuery<FabricObject> query = new FabricPaginationQuery<>();
         query.setType(UserFabricRequest.TYPE);
         query.setPageSize(pageSize);
-        query.setBookmark(mark);
+        query.setBookmark(bookmark);
         query.equals("key", id).equals("age", age).like("name", name);
         FabricPagination<FabricObject> pagination = iFabricService.pagination(query);
+        query.setBookmark(pagination.getBookmark());
+        FabricPagination<FabricObject> next = iFabricService.pagination(query);
+        if (CollectionUtils.isEmpty(next.getData())){
+            pagination.setBookmark(null);
+        }
         return ResponseEntity.ok(pagination);
+    }
+
+    @GetMapping("user/size")
+    public ResponseEntity<?> size(@RequestParam(required = false) String id,@RequestParam(required = false)Integer age,@RequestParam(required = false)String name){
+        FabricQuery query = new FabricQuery();
+        query.equals("key", id).equals("age", age).like("name", name);
+        FabricQueryResponse<Number> response = iFabricService.count(query);
+        return ResponseEntity.ok(response);
     }
 }
