@@ -1,0 +1,18 @@
+spring:
+  fabric:
+    chaincode:
+      identify: commonChaincode
+      name: commonChaincode
+      version: 1.0
+    channel: xxzx
+    organizations:
+      - org1
+    name: xxzx-fabric
+    gateway:
+      wallet:
+        identify: admin.id
+        file: C:\Users\MSI\Desktop\spring-fabric-gateway-master\fabric-explorer-spring-boot-starter\wallet
+        memory: false
+    network:
+      file: peerConfig\connection-org1.yaml
+      name: fabric network name

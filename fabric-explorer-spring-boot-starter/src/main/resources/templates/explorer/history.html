@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>历史记录</title>
+
+<!-- Bootstrap core CSS -->
+<link rel="shortcut icon" th:href="${baseURL + '/favicon.ico'}">
+<link th:href="${baseURL + '/css/explorer/bootstrap.min.css'}" rel="stylesheet">
+<link th:href="${baseURL + '/css/explorer/datatables.bootstrap4.min.css'}"
+	rel="stylesheet">
+<link th:href="${baseURL + '/css/explorer/main.css'}" rel="stylesheet">
+</head>
+<body>
+	<input type="hidden" id="baseURL" th:value="${baseURL}" />
+	<input type="hidden" id="path" th:value="${path}" />
+	<input type="hidden" id="key" th:value="${key}" />
+	<input type="hidden" id="type" th:value="${type}" />
+	<input type="hidden" id="viewDetails" th:value="#{tx.view.details}" />
+	<div class="wrapper">
+		<header class="header-top">
+			<nav class="navbar navbar-light bg-light">
+				<div class="container">
+					<a th:href="${baseURL + '/' + path}"
+						class="navbar-brand router-link-exact-active router-link-active"
+						style="font-size: 32px; color: #606060"><img
+						th:src="${baseURL + '/' + logo}" width="40" height="40"
+						style="margin-right: 10px; margin-top: -6px;" alt=""
+						class="d-inline-block"> <label th:text="${title}"></label> </a>
+					<form class="form-inline" style="width: 40%;">
+						<input type="search" th:placeholder="#{index.search.placeholder}"
+							aria-label="Search" class="form-control mr-sm-2 col-sm-9"
+							id="query">
+						<button type="button" class="btn btn-outline-success my-2 my-sm-0"
+							onclick="performSearch()" th:text="#{index.search}"></button>
+					</form>
+
+					<a th:href="${hyperledgerExplorerUrl}"><img
+						th:src="${baseURL + '/img/explorer/hyperledger_explorer.svg'}" width="150"
+						height="32" th:alt="#{index.hyperledger.explorer.title}"
+						data-toggle="tooltip" th:title="#{index.hyperledger.explorer.title}"></a>
+				</div>
+			</nav>
+		</header>
+		<div class="main-content">
+			<div class="container">
+				<nav class="breadcrumb-container"
+					style="margin-top: 10px; margin-bottom: -30px;">
+					<ol class="breadcrumb bg-white">
+						<li class="breadcrumb-item"><a th:href="${baseURL + '/'}"><img
+								th:src="${baseURL + '/img/explorer/home.png'}" class="image"
+								th:text="#{index.title}"> </a></li>
+						<li class="breadcrumb-item active" aria-current="page"
+							th:text="#{index.breadcrumb.blockchain}"></li>
+						<li class="breadcrumb-item" th:text="#{index.breadcrumb.history}"></li>
+					</ol>
+				</nav>
+				<div class="row">
+					<div class="col-sm-12">
+						<div>
+							<div class="card mt-3">
+								<div class="card-header bg-fabric text-center text-white">
+									<label th:text="#{history.title}"></label>
+								</div>
+								<ul class="list-group list-group-flush">
+									<li class="list-group-item"><div class="row">
+											<div class="col-sm-3">
+												<strong>Key</strong>
+											</div>
+											<div class="col-sm-9">
+												<code id="keyValue"> </code>
+											</div>
+										</div></li>
+								</ul>
+							</div>
+							<div class="card mt-3">
+								<div class="card-header bg-fabric text-center text-white">
+									<label th:text="#{history.table}"></label>
+								</div>
+								<table class="table table-styled " style="width: 100%"
+									id="dataTable">
+									<thead>
+										<th>#</th>
+										<th th:text="#{history.table.id}"></th>
+										<th th:text="#{history.table.time}"></th>
+										<th th:text="#{history.table.delete}"></th>
+									</thead>
+								</table>
+							</div>
+						</div>
+
+						<div class="row mt-3 justify-content-center">
+							<a class="btn btn-primary" th:href="${baseURL + '/' + path}"><label
+								th:text="#{back}"></label></a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<footer class="footer bg-light">
+			<div class="container">
+				<div class="row justify-content-center">
+					<span class="copyright" style="color: #606060"><label
+						th:text="#{copyright}"></label> <label th:text="${copyright}"></label>
+					</span>
+				</div>
+			</div>
+		</footer>
+	</div>
+	<!-- Bootstrap core JavaScript -->
+	<script th:src="${baseURL + '/js/explorer/jquery.min.js'}"></script>
+	<script th:src="${baseURL + '/js/explorer/popper.min.js'}"></script>
+	<script th:src="${baseURL + '/js/explorer/bootstrap.min.js'}"></script>
+	<script th:src="${baseURL + '/js/explorer/datatables.min.js'}"></script>
+	<script th:src="${baseURL + '/js/explorer/common.js'}"></script>
+	<script th:src="${baseURL + '/js/explorer/history.js'}"></script>
+</body>
+
+</html>
