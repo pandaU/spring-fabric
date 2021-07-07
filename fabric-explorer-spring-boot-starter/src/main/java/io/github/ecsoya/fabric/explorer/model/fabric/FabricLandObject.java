@@ -67,11 +67,13 @@ public class FabricLandObject extends FabricObject {
      */
     private Double addTotal;
 
-    private Double lastProjectArable;
-
     private String lastProjectType;
 
+    private String lastProjectId;
+
     private String lastProjectName;
+
+    private Double lastProjectArable;
 
     private String createTime;
 

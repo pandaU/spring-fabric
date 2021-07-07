@@ -63,9 +63,10 @@ public class ProjectController {
         if (!CollectionUtils.isEmpty(data)){
             FabricLandObject object = data.get(0);
             compute(object,request);
-            object.setLastProjectArable(request.getArableLand());
-            object.setLastProjectName(request.getProjectName());
+            object.setLastProjectId(request.getId());
             object.setLastProjectType(request.getType());
+            object.setLastProjectName(request.getProjectName());
+            object.setLastProjectArable(request.getArableLand());
             object.setUpdateTime(current);
             fabricLandService.extUpdate(object);
         }else {
