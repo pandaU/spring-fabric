@@ -5,50 +5,125 @@ import java.util.Objects;
 import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 
+/**
+ * <p>
+ * The type History.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @DataType
 public class History {
 
-	@Property
+    /**
+     * Tx id
+     */
+    @Property
 	private String txId;
 
-	@Property
+    /**
+     * Value
+     */
+    @Property
 	private String value;
 
-	@Property
+    /**
+     * Timestamp
+     */
+    @Property
 	private Long timestamp;
 
-	@Property
+    /**
+     * Is delete
+     */
+    @Property
 	private Boolean isDelete;
 
-	public String getTxId() {
+    /**
+     * Gets tx id.
+     *
+     * @return the tx id
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public String getTxId() {
 		return txId;
 	}
 
-	public void setTxId(String txId) {
+    /**
+     * Sets tx id.
+     *
+     * @param txId the tx id
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public void setTxId(String txId) {
 		this.txId = txId;
 	}
 
-	public String getValue() {
+    /**
+     * Gets value.
+     *
+     * @return the value
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public String getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+    /**
+     * Sets value.
+     *
+     * @param value the value
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public void setValue(String value) {
 		this.value = value;
 	}
 
-	public Long getTimestamp() {
+    /**
+     * Gets timestamp.
+     *
+     * @return the timestamp
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public Long getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Long timestamp) {
+    /**
+     * Sets timestamp.
+     *
+     * @param timestamp the timestamp
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
 
-	public Boolean getIsDelete() {
+    /**
+     * Gets is delete.
+     *
+     * @return the is delete
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public Boolean getIsDelete() {
 		return isDelete;
 	}
 
-	public void setIsDelete(Boolean isDelete) {
+    /**
+     * Sets is delete.
+     *
+     * @param isDelete the is delete
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public void setIsDelete(Boolean isDelete) {
 		this.isDelete = isDelete;
 	}
 

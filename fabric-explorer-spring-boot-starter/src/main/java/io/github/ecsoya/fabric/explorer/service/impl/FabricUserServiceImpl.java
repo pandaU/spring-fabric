@@ -15,10 +15,22 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 
+/**
+ * <p>
+ * The type Fabric user service.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @Service
 public class FabricUserServiceImpl extends AbstractFabricService<FabricUserObject> implements FabricUserService {
 
 
+    /**
+     * Fabric user service
+     *
+     * @param fabricContext fabric context
+     */
     @Autowired
     public FabricUserServiceImpl(FabricContext fabricContext) {
         super(fabricContext);

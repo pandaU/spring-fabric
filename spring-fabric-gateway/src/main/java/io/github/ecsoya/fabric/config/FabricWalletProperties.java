@@ -10,41 +10,57 @@ import org.omg.CORBA.PRIVATE_MEMBER;
 
 /**
  * The wallet configuration of fabric gateway.
- * 
+ *
  * @author Jin Liu (jin.liu@soyatec.com)
+ * @date 2021 -07-07
  * @see Wallet
  * @see Identity
  */
 @Data
 public class FabricWalletProperties {
 
-	/**
-	 * Using memory wallet or not.
-	 * 
-	 * @see InMemoryWalletStore
-	 * @see FileSystemWalletStore
-	 */
-	private boolean memory = true;
+    /**
+     * Using memory wallet or not.
+     *
+     * @see InMemoryWalletStore
+     * @see FileSystemWalletStore
+     */
+    private boolean memory = true;
 
-	/**
-	 * The wallet file path for using {@link FileSystemWalletStore}.
-	 */
-	private String file;
+    /**
+     * The wallet file path for using {@link FileSystemWalletStore}.
+     */
+    private String file;
 
-	/**
-	 * The default identify of wallet.
-	 * 
-	 * @see Identity
-	 */
-	private String identity = "admin";
+    /**
+     * The default identify of wallet.
+     *
+     * @see Identity
+     */
+    private String identity = "admin";
 
-	private String identityPw = "adminpw";
+    /**
+     * Identity pw
+     */
+    private String identityPw = "adminpw";
 
-	private String caUrl;
+    /**
+     * Ca url
+     */
+    private String caUrl;
 
-	private String caFile;
+    /**
+     * Ca file
+     */
+    private String caFile;
 
-	private String caHost;
+    /**
+     * Ca host
+     */
+    private String caHost;
 
-    private String caMSP = "Org1MSP";
+    /**
+     * Ca msp
+     */
+    private String caMsp = "Org1MSP";
 }

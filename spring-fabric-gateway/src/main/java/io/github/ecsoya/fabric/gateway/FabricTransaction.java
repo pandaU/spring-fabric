@@ -37,36 +37,76 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Override the default {@link Contract} implementation.
- * 
- * @see FabricContract
- * 
+ *
  * @author Jin Liu (jin.liu@soyatec.com)
+ * @date 2021 -07-07
+ * @see FabricContract
  */
 @Slf4j
 public class FabricTransaction implements Transaction {
+	/**
+	 * logger
+	 */
 	private static final Logger logger = LoggerFactory.getLogger(FabricTransaction.class);
 
 	/**
+	 * Orderer timeout seconds
+	 *
 	 * @since 1.0.6
 	 */
-	private long ordererTimeout = 60; // seconds
+	private long ordererTimeout = 60;
 
 	/**
+	 * Proposal timeout seconds
+	 *
 	 * @since 1.0.6
 	 */
-	private long proposalTimeout = 5; // seconds
+	private long proposalTimeout = 5;
 
+	/**
+	 * Delegate
+	 */
 	private TransactionImpl delegate;
+	/**
+	 * Commit timeout
+	 */
 	private TimePeriod commitTimeout;
+	/**
+	 * Commit handler factory
+	 */
 	private CommitHandlerFactory commitHandlerFactory;
+	/**
+	 * Network
+	 */
 	private NetworkImpl network;
+	/**
+	 * Channel
+	 */
 	private Channel channel;
+	/**
+	 * Gateway
+	 */
 	private GatewayImpl gateway;
+	/**
+	 * Contract
+	 */
 	private ContractImpl contract;
 
+	/**
+	 * Transient data
+	 */
 	private Map<String, byte[]> transientData;
+	/**
+	 * Endorsing peers
+	 */
 	private Collection<Peer> endorsingPeers = null;
 
+	/**
+	 * Fabric transaction
+	 *
+	 * @param delegate delegate
+	 * @param contract contract
+	 */
 	public FabricTransaction(TransactionImpl delegate, ContractImpl contract) {
 		this.delegate = delegate;
 		this.contract = contract;
@@ -113,6 +153,14 @@ public class FabricTransaction implements Transaction {
 		return delegate.evaluate(args);
 	}
 
+	/**
+	 * Execute string.
+	 *
+	 * @param args the args
+	 * @return the string
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:18
+	 */
 	public String execute(String[] args) {
 		try {
 			TransactionProposalRequest request = newProposalRequest(args);
@@ -125,7 +173,7 @@ public class FabricTransaction implements Transaction {
 			String transactionId = proposalResponse.getTransactionID();
 
 			Channel.TransactionOptions transactionOptions = Channel.TransactionOptions.createTransactionOptions()
-					.nOfEvents(Channel.NOfEvents.createNoEvents()); // Disable default commit wait behaviour
+					.nOfEvents(Channel.NOfEvents.createNoEvents());
 
 			CommitHandler commitHandler = commitHandlerFactory.create(transactionId, network);
 			commitHandler.startListening();
@@ -148,6 +196,14 @@ public class FabricTransaction implements Transaction {
 		}
 	}
 
+	/**
+	 * New proposal request transaction proposal request.
+	 *
+	 * @param args the args
+	 * @return the transaction proposal request
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:18
+	 */
 	private TransactionProposalRequest newProposalRequest(String[] args) {
 		TransactionProposalRequest request = network.getGateway().getClient().newTransactionProposalRequest();
 		configureRequest(request, args);
@@ -162,6 +218,14 @@ public class FabricTransaction implements Transaction {
 		return request;
 	}
 
+	/**
+	 * Configure request.
+	 *
+	 * @param request the request
+	 * @param args    the args
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:18
+	 */
 	private void configureRequest(TransactionRequest request, String[] args) {
 		request.setChaincodeID(getChaincodeId());
 		request.setFcn(getName());
@@ -169,10 +233,28 @@ public class FabricTransaction implements Transaction {
 		request.setProposalWaitTime(getProposalTimeout() * 1000);
 	}
 
+	/**
+	 * Gets chaincode id.
+	 *
+	 * @return the chaincode id
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:18
+	 */
 	private ChaincodeID getChaincodeId() {
 		return ChaincodeID.newBuilder().setName(contract.getChaincodeId()).build();
 	}
 
+	/**
+	 * Send transaction proposal collection.
+	 *
+	 * @param request the request
+	 * @return the collection
+	 * @throws InvalidArgumentException  the invalid argument exception
+	 * @throws ServiceDiscoveryException the service discovery exception
+	 * @throws ProposalException         the proposal exception
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:18
+	 */
 	private Collection<ProposalResponse> sendTransactionProposal(TransactionProposalRequest request)
 			throws InvalidArgumentException, ServiceDiscoveryException, ProposalException {
 		if (endorsingPeers != null) {
@@ -187,6 +269,15 @@ public class FabricTransaction implements Transaction {
 		}
 	}
 
+	/**
+	 * Validate peer responses collection.
+	 *
+	 * @param proposalResponses the proposal responses
+	 * @return the collection
+	 * @throws ContractException the contract exception
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:19
+	 */
 	private Collection<ProposalResponse> validatePeerResponses(Collection<ProposalResponse> proposalResponses)
 			throws ContractException {
 		final Collection<ProposalResponse> validResponses = new ArrayList<>();
@@ -213,18 +304,46 @@ public class FabricTransaction implements Transaction {
 		return validResponses;
 	}
 
+	/**
+	 * Gets orderer timeout.
+	 *
+	 * @return the orderer timeout
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:19
+	 */
 	public long getOrdererTimeout() {
 		return ordererTimeout;
 	}
 
+	/**
+	 * Sets orderer timeout.
+	 *
+	 * @param ordererTimeout the orderer timeout
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:19
+	 */
 	public void setOrdererTimeout(long ordererTimeout) {
 		this.ordererTimeout = ordererTimeout;
 	}
 
+	/**
+	 * Gets proposal timeout.
+	 *
+	 * @return the proposal timeout
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:19
+	 */
 	public long getProposalTimeout() {
 		return proposalTimeout;
 	}
 
+	/**
+	 * Sets proposal timeout.
+	 *
+	 * @param proposalTimeout the proposal timeout
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:19
+	 */
 	public void setProposalTimeout(long proposalTimeout) {
 		this.proposalTimeout = proposalTimeout;
 	}

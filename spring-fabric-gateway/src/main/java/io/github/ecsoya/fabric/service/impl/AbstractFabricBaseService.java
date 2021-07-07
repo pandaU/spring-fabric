@@ -12,13 +12,31 @@ import io.github.ecsoya.fabric.FabricResponse;
 import io.github.ecsoya.fabric.config.FabricContext;
 import io.github.ecsoya.fabric.service.IFabricBaseService;
 
+/**
+ * <p>
+ * The type Abstract fabric base service.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 public abstract class AbstractFabricBaseService implements IFabricBaseService {
 
-	private Logger logger = LoggerFactory.getLogger(AbstractFabricBaseService.class);
+    /**
+     * Logger
+     */
+    private Logger logger = LoggerFactory.getLogger(AbstractFabricBaseService.class);
 
-	protected FabricContext fabricContext;
+    /**
+     * Fabric context
+     */
+    protected FabricContext fabricContext;
 
-	public AbstractFabricBaseService(FabricContext fabricContext) {
+    /**
+     * Abstract fabric base service
+     *
+     * @param fabricContext fabric context
+     */
+    public AbstractFabricBaseService(FabricContext fabricContext) {
 		this.fabricContext = fabricContext;
 	}
 

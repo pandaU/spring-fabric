@@ -6,13 +6,20 @@ import com.google.gson.FieldAttributes;
 import io.github.ecsoya.fabric.annotation.FabricIgnore;
 
 /**
+ * <p>
+ * The type Fabric gson deserialize exclusion strategy.
+ *
  * @author Jin Liu (jin.liu@soyatec.com)
+ * @date 2021 -07-07
  * @see FabricIgnore
  * @see FabricGson
  */
 public class FabricGsonDeserializeExclusionStrategy implements ExclusionStrategy {
 
-	public static final FabricGsonDeserializeExclusionStrategy INSTANCE = new FabricGsonDeserializeExclusionStrategy();
+    /**
+     * INSTANCE
+     */
+    public static final FabricGsonDeserializeExclusionStrategy INSTANCE = new FabricGsonDeserializeExclusionStrategy();
 
 	@Override
 	public boolean shouldSkipField(FieldAttributes f) {

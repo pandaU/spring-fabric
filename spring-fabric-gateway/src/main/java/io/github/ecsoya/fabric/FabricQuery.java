@@ -11,13 +11,10 @@ import com.google.gson.JsonObject;
 
 /**
  * Fabric query constructor for CouchDB.
- * 
- * @see <a href=
- *      "http://docs.couchdb.org/en/stable/api/database/find.html?highlight=find#post--db-_find">
- *      CouchDB</a>
- * 
+ *
  * @author Jin Liu (jin.liu@soyatec.com)
- * 
+ * @date 2021 -07-07
+ * @see <a href=      "http://docs.couchdb.org/en/stable/api/database/find.html?highlight=find#post--db-_find">      CouchDB</a>
  */
 public class FabricQuery {
 
@@ -36,21 +33,52 @@ public class FabricQuery {
 	 */
 	private String type;
 
+	/**
+	 * Fabric query
+	 *
+	 * @param type type
+	 */
 	public FabricQuery(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * Fabric query
+	 */
 	public FabricQuery() {
 	}
 
+	/**
+	 * Sets type.
+	 *
+	 * @param type the type
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * Gets type.
+	 *
+	 * @return the type
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public String getType() {
 		return type;
 	}
 
+	/**
+	 * Equals fabric query.
+	 *
+	 * @param key   the key
+	 * @param value the value
+	 * @return the fabric query
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public FabricQuery equals(String key, Object value) {
 		if (key == null || value == null) {
 			return this;
@@ -59,6 +87,15 @@ public class FabricQuery {
 		return this;
 	}
 
+	/**
+	 * Like fabric query.
+	 *
+	 * @param key   the key
+	 * @param value the value
+	 * @return the fabric query
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public FabricQuery like(String key, String value) {
 		if (key == null || value == null) {
 			return this;
@@ -69,8 +106,10 @@ public class FabricQuery {
 
 	/**
 	 * Generate query string for CouchDB.
-	 * 
+	 *
 	 * @return the selector.
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
 	 */
 	public String selector() {
 		JsonObject query = new JsonObject();
@@ -103,16 +142,21 @@ public class FabricQuery {
 			regex.addProperty("$regex", ".*?" + entry.getValue() + ".*?");
 			selector.add(entry.getKey(), regex);
 		}
-
-//		JsonArray index = new JsonArray();
-//		index.add("id");
-//		selector.add("use_index", index);
-
 		query.add("selector", selector);
 		Gson gson = new Gson();
 		return gson.toJson(query);
 	}
 
+	/**
+	 * Build fabric query.
+	 *
+	 * @param type  the type
+	 * @param key   the key
+	 * @param value the value
+	 * @return the fabric query
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public static FabricQuery build(String type, String key, Object value) {
 		FabricQuery query = new FabricQuery(type);
 		return query.equals(key, value);

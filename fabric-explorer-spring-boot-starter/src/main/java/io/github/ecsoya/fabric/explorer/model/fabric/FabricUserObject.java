@@ -5,10 +5,10 @@ import lombok.Data;
 
 /**
  * <p>
- * The type User fabric request.
+ * The type Fabric user object.
  *
  * @author XieXiongXiong
- * @date 2021 -07-06
+ * @date 2021 -07-07
  */
 @Data
 public class FabricUserObject extends FabricObject {
@@ -17,10 +17,19 @@ public class FabricUserObject extends FabricObject {
      */
     public static final String TYPE = "user";
 
+    /**
+     * Name
+     */
     private String name;
 
+    /**
+     * Age
+     */
     private Integer age;
 
+    /**
+     * Fabric user object
+     */
     public FabricUserObject() {
         super();
         super.setType(TYPE);

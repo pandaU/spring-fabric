@@ -11,10 +11,25 @@ import io.github.ecsoya.fabric.annotation.FabricType;
 import io.github.ecsoya.fabric.bean.IFabricObject;
 import io.github.ecsoya.fabric.json.IFabricJsonConverter;
 
+/**
+ * <p>
+ * The type Fabric util.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 public class FabricUtil {
 
-	public static byte[] stringToHash(String str) {
-		if (str == null || str.equals("")) {
+    /**
+     * String to hash byte [ ].
+     *
+     * @param str the str
+     * @return the byte [ ]
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:15
+     */
+    public static byte[] stringToHash(String str) {
+		if (str == null || "".equals(str)) {
 			return null;
 		}
 		try {
@@ -24,14 +39,30 @@ public class FabricUtil {
 		}
 	}
 
-	public static String hashToString(byte[] hash) {
+    /**
+     * Hash to string string.
+     *
+     * @param hash the hash
+     * @return the string
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:15
+     */
+    public static String hashToString(byte[] hash) {
 		if (hash == null) {
 			return null;
 		}
 		return Hex.encodeHexString(hash);
 	}
 
-	public static IFabricJsonConverter getConverter(Class<?> type) {
+    /**
+     * Gets converter.
+     *
+     * @param type the type
+     * @return the converter
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:15
+     */
+    public static IFabricJsonConverter getConverter(Class<?> type) {
 		if (type == null) {
 			return IFabricJsonConverter.defaultConverter();
 		}
@@ -49,14 +80,32 @@ public class FabricUtil {
 		return IFabricJsonConverter.defaultConverter();
 	}
 
-	public static <T> T build(String json, Class<T> type) {
+    /**
+     * Build t.
+     *
+     * @param <T>  the type parameter
+     * @param json the json
+     * @param type the type
+     * @return the t
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:15
+     */
+    public static <T> T build(String json, Class<T> type) {
 		if (json == null || type == null) {
 			return null;
 		}
 		return getConverter(type).fromString(json, type);
 	}
 
-	public static String resolveFabricId(Object object) {
+    /**
+     * Resolve fabric id string.
+     *
+     * @param object the object
+     * @return the string
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:15
+     */
+    public static String resolveFabricId(Object object) {
 		if (object == null) {
 			return null;
 		} else if (object instanceof IFabricObject) {
@@ -70,7 +119,15 @@ public class FabricUtil {
 		}
 	}
 
-	public static String resolveFabricType(Object object) {
+    /**
+     * Resolve fabric type string.
+     *
+     * @param object the object
+     * @return the string
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:15
+     */
+    public static String resolveFabricType(Object object) {
 		if (object == null) {
 			return IFabricObject.DEFAULT_TYPE;
 		} else if (object instanceof Class<?>) {

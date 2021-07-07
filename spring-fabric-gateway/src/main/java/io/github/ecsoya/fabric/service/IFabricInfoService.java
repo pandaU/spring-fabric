@@ -9,60 +9,103 @@ import io.github.ecsoya.fabric.bean.FabricBlock;
 import io.github.ecsoya.fabric.bean.FabricHistory;
 import io.github.ecsoya.fabric.bean.FabricLedger;
 import io.github.ecsoya.fabric.bean.FabricTransaction;
-import io.github.ecsoya.fabric.bean.FabricTransactionRWSet;
 
 /**
  * Default service to provided fabric blockchain info, such as blocks,
  * transactions and ledger.
- * 
- * @author ecsoya
  *
+ * @author ecsoya
+ * @date 2021 -07-07
  */
 public interface IFabricInfoService {
 
-	/**
-	 * Query Fabric Info.
-	 */
-	FabricQueryResponse<FabricLedger> queryFabricLedger();
+    /**
+     * Query Fabric Info.
+     *
+     * @return the fabric query response
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:20
+     */
+    FabricQueryResponse<FabricLedger> queryFabricLedger();
 
-	/**
-	 * Query fabric block by using block number.
-	 */
-	FabricQueryResponse<FabricBlock> queryBlockByNumber(long blockNumber);
+    /**
+     * Query fabric block by using block number.
+     *
+     * @param blockNumber the block number
+     * @return the fabric query response
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:20
+     */
+    FabricQueryResponse<FabricBlock> queryBlockByNumber(long blockNumber);
 
-	/**
-	 * Query fabric block by using transaction id.
-	 */
-	FabricQueryResponse<FabricBlock> queryBlockByTransactionID(String txId);
+    /**
+     * Query fabric block by using transaction id.
+     *
+     * @param txId the tx id
+     * @return the fabric query response
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:20
+     */
+    FabricQueryResponse<FabricBlock> queryBlockByTransactionId(String txId);
 
-	/**
-	 * Query fabric block by using block hash.
-	 */
-	FabricQueryResponse<FabricBlock> queryBlockByHash(byte[] blockHash);
+    /**
+     * Query fabric block by using block hash.
+     *
+     * @param blockHash the block hash
+     * @return the fabric query response
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:20
+     */
+    FabricQueryResponse<FabricBlock> queryBlockByHash(byte[] blockHash);
 
-	/**
-	 * Paging query fabric blocks.
-	 * 
-	 */
-	FabricPagination<FabricBlock> queryBlocks(FabricPaginationQuery<FabricBlock> query);
+    /**
+     * Paging query fabric blocks.
+     *
+     * @param query the query
+     * @return the fabric pagination
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:20
+     */
+    FabricPagination<FabricBlock> queryBlocks(FabricPaginationQuery<FabricBlock> query);
 
-	/**
-	 * Query all transactions of a block number.
-	 */
-	FabricQueryResponse<List<FabricTransaction>> queryTransactions(long blockNumber);
+    /**
+     * Query all transactions of a block number.
+     *
+     * @param blockNumber the block number
+     * @return the fabric query response
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:20
+     */
+    FabricQueryResponse<List<FabricTransaction>> queryTransactions(long blockNumber);
 
-	/**
-	 * Query transaction reads and writes of a transaction id.
-	 */
-	FabricQueryResponse<String> queryTransactionRWSet(String txId);
+    /**
+     * Query transaction reads and writes of a transaction id.
+     *
+     * @param txId the tx id
+     * @return the fabric query response
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:20
+     */
+    FabricQueryResponse<String> queryTransactionRwSet(String txId);
 
-	/**
-	 * Query history of object with given key and type.
-	 */
-	FabricQueryResponse<List<FabricHistory>> queryHistory(String type, String key);
+    /**
+     * Query history of object with given key and type.
+     *
+     * @param type the type
+     * @param key  the key
+     * @return the fabric query response
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:20
+     */
+    FabricQueryResponse<List<FabricHistory>> queryHistory(String type, String key);
 
-	/**
-	 * Query transaction with id.
-	 */
-	FabricQueryResponse<FabricTransaction> queryTransaction(String txid);
+    /**
+     * Query transaction with id.
+     *
+     * @param txid the txid
+     * @return the fabric query response
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:20
+     */
+    FabricQueryResponse<FabricTransaction> queryTransaction(String txid);
 }

@@ -2,10 +2,23 @@ package io.github.ecsoya.fabric.bean;
 
 import lombok.Data;
 
+/**
+ * <p>
+ * The type Fabric identity.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @Data
 public class FabricIdentity {
 
-	private long blockNumber;
+    /**
+     * Block number
+     */
+    private long blockNumber;
 
-	private String dataHash;
+    /**
+     * Data hash
+     */
+    private String dataHash;
 }

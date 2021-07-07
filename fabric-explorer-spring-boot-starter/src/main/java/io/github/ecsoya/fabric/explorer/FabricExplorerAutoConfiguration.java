@@ -16,20 +16,42 @@ import org.springframework.context.support.AbstractResourceBasedMessageSource;
 import io.github.ecsoya.fabric.boot.SpringFabricGatewayAutoConfigure;
 import io.github.ecsoya.fabric.explorer.controller.FabricExplorerController;
 
+/**
+ * <p>
+ * The type Fabric explorer auto configuration.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @Configuration
 @ImportAutoConfiguration(classes = { SpringFabricGatewayAutoConfigure.class, MessageSourceAutoConfiguration.class })
 @EnableConfigurationProperties(FabricExplorerProperties.class)
 public class FabricExplorerAutoConfiguration {
 
-	private Logger logger = LoggerFactory.getLogger(FabricExplorerAutoConfiguration.class);
+    /**
+     * Logger
+     */
+    private Logger logger = LoggerFactory.getLogger(FabricExplorerAutoConfiguration.class);
 
-	@Autowired
+    /**
+     * Properties
+     */
+    @Autowired
 	private FabricExplorerProperties properties;
 
-	@Autowired(required = false)
+    /**
+     * Message source
+     */
+    @Autowired(required = false)
 	private MessageSource messageSource;
 
-	@PostConstruct
+    /**
+     * Initialize.
+     *
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:23
+     */
+    @PostConstruct
 	private void initialize() {
 		logger.info("Init FabricExplorerAutoConfiguration: " + properties);
 		if (messageSource instanceof AbstractResourceBasedMessageSource) {
@@ -37,14 +59,28 @@ public class FabricExplorerAutoConfiguration {
 		}
 	}
 
-	@Bean
+    /**
+     * Fabric explorer handler mapping fabric explorer handler mapping.
+     *
+     * @return the fabric explorer handler mapping
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:23
+     */
+    @Bean
 	public FabricExplorerHandlerMapping fabricExplorerHandlerMapping() {
 		FabricExplorerHandlerMapping mapping = new FabricExplorerHandlerMapping();
 		mapping.setOrder(Integer.MAX_VALUE - 3);
 		return mapping;
 	}
 
-	@Bean
+    /**
+     * Fabric explorer controller fabric explorer controller.
+     *
+     * @return the fabric explorer controller
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:23
+     */
+    @Bean
 	public FabricExplorerController fabricExplorerController() {
 		return new FabricExplorerController();
 	}

@@ -13,7 +13,7 @@ spring:
         caUrl: https://ca.org1.xxzx.com:7054
         caFile: peerConfig/ca.org1.xxzx.com-cert.pem
         cahost: ca.org1.xxzx.com
-        caMSP: Org1MSP
+        caMsp: Org1MSP
         identify: admin.id
         file: C:\Users\MSI\Desktop\spring-fabric-gateway-master\fabric-explorer-spring-boot-starter\wallet
         memory: true

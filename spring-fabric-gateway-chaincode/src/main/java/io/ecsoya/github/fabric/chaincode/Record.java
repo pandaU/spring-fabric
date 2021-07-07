@@ -7,35 +7,82 @@ import org.hyperledger.fabric.contract.annotation.Property;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * <p>
+ * The type Record.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @DataType
 public class Record {
 
-	@Property
+    /**
+     * Key
+     */
+    @Property
 	@SerializedName(value = "Key")
 	private String key;
 
-	@Property
+    /**
+     * Record
+     */
+    @Property
 	@SerializedName(value = "Record")
 	private String record;
 
-	public Record(String key, String record) {
+    /**
+     * Record
+     *
+     * @param key    key
+     * @param record record
+     */
+    public Record(String key, String record) {
 		this.key = key;
 		this.record = record;
 	}
 
-	public String getKey() {
+    /**
+     * Gets key.
+     *
+     * @return the key
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:00
+     */
+    public String getKey() {
 		return key;
 	}
 
-	public void setKey(String key) {
+    /**
+     * Sets key.
+     *
+     * @param key the key
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:00
+     */
+    public void setKey(String key) {
 		this.key = key;
 	}
 
-	public String getRecord() {
+    /**
+     * Gets record.
+     *
+     * @return the record
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:00
+     */
+    public String getRecord() {
 		return record;
 	}
 
-	public void setRecord(String record) {
+    /**
+     * Sets record.
+     *
+     * @param record the record
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:00
+     */
+    public void setRecord(String record) {
 		this.record = record;
 	}
 

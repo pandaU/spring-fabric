@@ -6,54 +6,60 @@ import java.util.List;
 import lombok.Data;
 
 /**
- * 
  * Query object with Page.
- * 
- * @author ecsoya
  *
+ * @param <T> the type parameter
+ * @author ecsoya
+ * @date 2021 -07-07  *
  */
 @Data
 public class FabricPagination<T> {
 
-	/**
-	 * Results List
-	 */
-	private List<T> data = new ArrayList<>();
+    /**
+     * Results List
+     */
+    private List<T> data = new ArrayList<>();
 
-	/**
-	 * Total counts of records.
-	 */
-	private int recordsCount;
+    /**
+     * Total counts of records.
+     */
+    private int recordsCount;
 
-	/**
-	 * The bookmark of current query.
-	 */
-	private String bookmark = "";
+    /**
+     * The bookmark of current query.
+     */
+    private String bookmark = "";
 
-	/**
-	 * The count of each page.
-	 */
-	private int pageSize = 10;
+    /**
+     * The count of each page.
+     */
+    private int pageSize = 10;
 
-	/**
-	 * Total records, before filtering (i.e. the total number of records in the
-	 * database)
-	 */
-	private int recordsTotal;
+    /**
+     * Total records, before filtering (i.e. the total number of records in the
+     * database)
+     */
+    private int recordsTotal;
 
-	/**
-	 * Total records, after filtering (i.e. the total number of records after
-	 * filtering has been applied - not just the number of records being returned
-	 * for this page of data).
-	 */
-	private int recordsFiltered;
+    /**
+     * Total records, after filtering (i.e. the total number of records after
+     * filtering has been applied - not just the number of records being returned
+     * for this page of data).
+     */
+    private int recordsFiltered;
 
-	/**
-	 * Current page index.
-	 */
-	private int currentPage;
+    /**
+     * Current page index.
+     */
+    private int currentPage;
 
-	public void updateTotalRecords() {
+    /**
+     * Update total records.
+     *
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:21
+     */
+    public void updateTotalRecords() {
 		int total = currentPage * pageSize + recordsCount;
 
 		if (recordsCount < pageSize) {
@@ -65,7 +71,16 @@ public class FabricPagination<T> {
 		}
 	}
 
-	public static <T> FabricPagination<T> create(FabricPaginationQuery<T> query) {
+    /**
+     * Create fabric pagination.
+     *
+     * @param <T>   the type parameter
+     * @param query the query
+     * @return the fabric pagination
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:21
+     */
+    public static <T> FabricPagination<T> create(FabricPaginationQuery<T> query) {
 		FabricPagination<T> pagination = new FabricPagination<>();
 		pagination.setBookmark(query.getBookmark());
 		pagination.setPageSize(query.getPageSize());

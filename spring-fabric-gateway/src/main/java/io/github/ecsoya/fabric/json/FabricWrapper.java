@@ -12,22 +12,50 @@ import io.github.ecsoya.fabric.utils.AnnotationUtils;
 import io.github.ecsoya.fabric.utils.FabricUtil;
 import lombok.Data;
 
+/**
+ * <p>
+ * The type Fabric wrapper.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @Data
 public class FabricWrapper {
 
-	private String key;
+    /**
+     * Key
+     */
+    private String key;
 
-	private String type;
+    /**
+     * Type
+     */
+    private String type;
 
-	private String value;
+    /**
+     * Value
+     */
+    private String value;
 
-	public FabricWrapper(Object object) {
+    /**
+     * Fabric wrapper
+     *
+     * @param object object
+     */
+    public FabricWrapper(Object object) {
 		if (object != null) {
 			initialize(object);
 		}
 	}
 
-	private void initialize(Object object) {
+    /**
+     * Initialize.
+     *
+     * @param object the object
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:15
+     */
+    private void initialize(Object object) {
 		if (object == null) {
 			return;
 		}
@@ -58,7 +86,14 @@ public class FabricWrapper {
 		}
 	}
 
-	public boolean isValid() {
+    /**
+     * Is valid boolean.
+     *
+     * @return the boolean
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:15
+     */
+    public boolean isValid() {
 		return key != null && type != null && value != null;
 	}
 

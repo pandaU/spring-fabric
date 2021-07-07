@@ -15,17 +15,22 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import io.github.ecsoya.fabric.explorer.controller.FabricExplorerController;
 
 /**
- * Custom HandlerMapping for resolve {@link FabricExplorerController}.
- * 
- * It will add the {@link FabricExplorerProperties}.path before each
- * {@link RequestMapping} of {@link FabricExplorerController}.
- * 
- * @author Jin Liu (jin.liu@soyatec.com)
+ * <p>
+ * The type Fabric explorer handler mapping.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
  */
 public class FabricExplorerHandlerMapping extends RequestMappingHandlerMapping {
 
+	/**
+	 * Logger
+	 */
 	private Logger logger = LoggerFactory.getLogger(FabricExplorerHandlerMapping.class);
 
+	/**
+	 * Properties
+	 */
 	@Autowired
 	private FabricExplorerProperties properties;
 

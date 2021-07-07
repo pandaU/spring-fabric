@@ -1,8 +1,18 @@
 package io.github.ecsoya.fabric.json;
 
+/**
+ * <p>
+ * The type Default fabric json converter.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 public class DefaultFabricJsonConverter implements IFabricJsonConverter {
 
-	public static final DefaultFabricJsonConverter INSTANCE = new DefaultFabricJsonConverter();
+    /**
+     * INSTANCE
+     */
+    public static final DefaultFabricJsonConverter INSTANCE = new DefaultFabricJsonConverter();
 
 	@Override
 	public String toString(Object object) {

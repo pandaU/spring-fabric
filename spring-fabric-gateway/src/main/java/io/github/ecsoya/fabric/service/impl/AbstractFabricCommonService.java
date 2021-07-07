@@ -22,17 +22,43 @@ import io.github.ecsoya.fabric.service.IFabricCommonService;
 import io.github.ecsoya.fabric.utils.FabricUtil;
 import io.github.ecsoya.fabric.utils.TypeResolver;
 
+/**
+ * <p>
+ * The type Abstract fabric common service.
+ *
+ * @param <T> the type parameter
+ * @author XieXiongXiong
+ * @date 2021 -07-07  *
+ */
 public abstract class AbstractFabricCommonService<T extends IFabricObject> extends AbstractFabricBaseService
 		implements IFabricCommonService<T> {
 
+	/**
+	 * Generic type
+	 */
 	private Class<T> genericType;
 
+	/**
+	 * Fabric type
+	 */
 	private String fabricType;
 
+	/**
+	 * Abstract fabric common service
+	 *
+	 * @param fabricContext fabric context
+	 */
 	public AbstractFabricCommonService(FabricContext fabricContext) {
 		super(fabricContext);
 	}
 
+	/**
+	 * Gets generic type.
+	 *
+	 * @return the generic type
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:19
+	 */
 	@SuppressWarnings("unchecked")
 	protected Class<T> getGenericType() {
 		if (genericType == null) {
@@ -41,6 +67,13 @@ public abstract class AbstractFabricCommonService<T extends IFabricObject> exten
 		return genericType;
 	}
 
+	/**
+	 * Gets fabric type.
+	 *
+	 * @return the fabric type
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:19
+	 */
 	protected String getFabricType() {
 		if (fabricType == null) {
 			fabricType = FabricUtil.resolveFabricType(getGenericType());
@@ -48,10 +81,38 @@ public abstract class AbstractFabricCommonService<T extends IFabricObject> exten
 		return fabricType;
 	}
 
+	/**
+	 * New request fabric request.
+	 *
+	 * @param function  the function
+	 * @param arguments the arguments
+	 * @return the fabric request
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:19
+	 */
 	protected abstract FabricRequest newRequest(String function, String... arguments);
 
+	/**
+	 * New query request fabric query request.
+	 *
+	 * @param <X>       the type parameter
+	 * @param type      the type
+	 * @param function  the function
+	 * @param arguments the arguments
+	 * @return the fabric query request
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:19
+	 */
 	protected abstract <X> FabricQueryRequest<X> newQueryRequest(Class<X> type, String function, String... arguments);
 
+	/**
+	 * Gets function.
+	 *
+	 * @param type the type
+	 * @return the function
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:19
+	 */
 	protected String getFunction(FunctionType type) {
 		return fabricContext.getFunction(type);
 	}

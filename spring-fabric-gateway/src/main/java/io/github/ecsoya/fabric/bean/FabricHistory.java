@@ -8,40 +8,48 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
  * Editing history for a key.
- * 
- * @author ecsoya
  *
+ * @author ecsoya
+ * @date 2021 -07-07
  */
 @Data
 public class FabricHistory {
 
-	/**
-	 * Transaction id of current history.
-	 */
-	private String txId;
+    /**
+     * Transaction id of current history.
+     */
+    private String txId;
 
-//	private JsonElement value;
 
-	/**
-	 * Modify timestamp of current history.
-	 */
-	private String timestamp;
+    /**
+     * Modify timestamp of current history.
+     */
+    private String timestamp;
 
-	/**
-	 * Mark is deleted or not.
-	 */
-	private boolean isDelete;
+    /**
+     * Mark is deleted or not.
+     */
+    private boolean isDelete;
 
-	/**
-	 * Block object.
-	 */
-	private FabricBlock block;
+    /**
+     * Block object.
+     */
+    private FabricBlock block;
 
-	private Map<String, Object> value;
+    /**
+     * Value
+     */
+    private Map<String, Object> value;
 
-	public void setBlockInfo(BlockInfo blockInfo) {
+    /**
+     * Sets block info.
+     *
+     * @param blockInfo the block info
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:14
+     */
+    public void setBlockInfo(BlockInfo blockInfo) {
 		if (blockInfo == null) {
 			return;
 		}

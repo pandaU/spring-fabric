@@ -7,16 +7,32 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
+/**
+ * <p>
+ * The type Fabric identity object.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @Data
 public class FabricIdentityObject implements IFabricIdentityObject {
 
-	@FabricIgnore
+    /**
+     * Id
+     */
+    @FabricIgnore
 	private String id;
 
-	@FabricIgnore
+    /**
+     * Identity
+     */
+    @FabricIgnore
 	private FabricIdentity identity;
 
-	@Expose(serialize = true, deserialize = false)
+    /**
+     * Type
+     */
+    @Expose(serialize = true, deserialize = false)
 	@Setter(AccessLevel.NONE)
 	private String type = getType();
 

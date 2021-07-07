@@ -11,16 +11,22 @@ import lombok.EqualsAndHashCode;
 
 /**
  * Fabric block which contains blockNumber, dataHash...
- * 
- * @author ecsoya
  *
+ * @author ecsoya
+ * @date 2021 -07-07
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class FabricBlock extends FabricIdentity {
 
+	/**
+	 * Channel
+	 */
 	private String channel;
 
+	/**
+	 * Transaction count
+	 */
 	private int transactionCount;
 
 	/**
@@ -33,9 +39,23 @@ public class FabricBlock extends FabricIdentity {
 	 */
 	private String currentTxTimestamp;
 
+	/**
+	 * Current hash
+	 */
 	private String currentHash;
+	/**
+	 * Previous hash
+	 */
 	private String previousHash;
 
+	/**
+	 * Create fabric block.
+	 *
+	 * @param blockInfo the block info
+	 * @return the fabric block
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:14
+	 */
 	public static FabricBlock create(BlockInfo blockInfo) {
 		if (blockInfo == null) {
 			return null;
@@ -45,7 +65,6 @@ public class FabricBlock extends FabricIdentity {
 		try {
 			block.setChannel(blockInfo.getChannelId());
 		} catch (InvalidProtocolBufferException e) {
-//			e.printStackTrace();
 		}
 		block.setCurrentHash(FabricUtil.hashToString(blockInfo.getDataHash()));
 		block.setDataHash(FabricUtil.hashToString(blockInfo.getDataHash()));

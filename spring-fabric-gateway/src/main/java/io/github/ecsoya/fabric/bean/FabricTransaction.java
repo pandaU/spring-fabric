@@ -10,42 +10,45 @@ import lombok.Data;
 
 /**
  * Fabric transaction info. Wrapper class for {@link EnvelopeInfo}
- * 
- * @author ecsoya
  *
+ * @author ecsoya
+ * @date 2021 -07-07
  */
 @Data
 public class FabricTransaction {
 
-	private int index;
+    /**
+     * Index
+     */
+    private int index;
 
-	/**
-	 * Transaction id.
-	 */
-	private String txId;
+    /**
+     * Transaction id.
+     */
+    private String txId;
 
-	/**
-	 * Transaction type, {@link EnvelopeType}
-	 */
-	private String type;
+    /**
+     * Transaction type, {@link EnvelopeType}
+     */
+    private String type;
 
-	/**
-	 * Timestamp of transaction.
-	 */
-	private Date date;
+    /**
+     * Timestamp of transaction.
+     */
+    private Date date;
 
-	/**
-	 * MSP if of the creator.
-	 */
-	private String creator;
+    /**
+     * MSP if of the creator.
+     */
+    private String creator;
 
-	/**
-	 * The validation code of this Transaction ({@link TxValidationCode}
-	 */
-	private int validationCode;
+    /**
+     * The validation code of this Transaction ({@link TxValidationCode}
+     */
+    private int validationCode;
 
-	/**
-	 * The channel of transaction.
-	 */
-	private String channel;
+    /**
+     * The channel of transaction.
+     */
+    private String channel;
 }

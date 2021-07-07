@@ -14,27 +14,38 @@ import org.hyperledger.fabric.gateway.impl.TransactionImpl;
 import org.hyperledger.fabric.gateway.spi.Checkpointer;
 
 /**
- * 
  * Overrite the default {@link Contract} to provided transactionId after
  * execution.
- * 
- * @author ecsoya
  *
+ * @author ecsoya
+ * @date 2021 -07-07
  */
 public class FabricContract implements Contract {
 
+	/**
+	 * Delegate
+	 */
 	private ContractImpl delegate;
 
 	/**
+	 * Orderer timeout seconds
+	 *
 	 * @since 1.0.6
 	 */
-	private long ordererTimeout = 60; // seconds
+	private long ordererTimeout = 60;
 
 	/**
+	 * Proposal timeout seconds
+	 *
 	 * @since 1.0.6
 	 */
-	private long proposalTimeout = 5; // seconds
+	private long proposalTimeout = 5;
 
+	/**
+	 * Fabric contract
+	 *
+	 * @param delegate delegate
+	 */
 	public FabricContract(ContractImpl delegate) {
 		this.delegate = delegate;
 	}
@@ -44,6 +55,18 @@ public class FabricContract implements Contract {
 		return delegate.createTransaction(name);
 	}
 
+	/**
+	 * Execute transaction string.
+	 *
+	 * @param name the name
+	 * @param args the args
+	 * @return the string
+	 * @throws ContractException    the contract exception
+	 * @throws TimeoutException     the timeout exception
+	 * @throws InterruptedException the interrupted exception
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:18
+	 */
 	public String executeTransaction(String name, String... args)
 			throws ContractException, TimeoutException, InterruptedException {
 		TransactionImpl tx = (TransactionImpl) delegate.createTransaction(name);
@@ -119,18 +142,46 @@ public class FabricContract implements Contract {
 		delegate.removeContractListener(listener);
 	}
 
+	/**
+	 * Gets orderer timeout.
+	 *
+	 * @return the orderer timeout
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:18
+	 */
 	public long getOrdererTimeout() {
 		return ordererTimeout;
 	}
 
+	/**
+	 * Sets orderer timeout.
+	 *
+	 * @param ordererTimeout the orderer timeout
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:18
+	 */
 	public void setOrdererTimeout(long ordererTimeout) {
 		this.ordererTimeout = ordererTimeout;
 	}
 
+	/**
+	 * Gets proposal timeout.
+	 *
+	 * @return the proposal timeout
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:18
+	 */
 	public long getProposalTimeout() {
 		return proposalTimeout;
 	}
 
+	/**
+	 * Sets proposal timeout.
+	 *
+	 * @param proposalTimeout the proposal timeout
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:18
+	 */
 	public void setProposalTimeout(long proposalTimeout) {
 		this.proposalTimeout = proposalTimeout;
 	}

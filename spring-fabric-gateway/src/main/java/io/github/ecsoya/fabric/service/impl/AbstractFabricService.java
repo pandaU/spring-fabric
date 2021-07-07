@@ -13,10 +13,23 @@ import io.github.ecsoya.fabric.bean.IFabricObject;
 import io.github.ecsoya.fabric.config.FabricContext;
 import io.github.ecsoya.fabric.service.IFabricService;
 
+/**
+ * <p>
+ * The type Abstract fabric service.
+ *
+ * @param <T> the type parameter
+ * @author XieXiongXiong
+ * @date 2021 -07-07  *
+ */
 public abstract class AbstractFabricService<T extends IFabricObject> extends AbstractFabricCommonService<T>
 		implements IFabricService<T> {
 
-	public AbstractFabricService(FabricContext fabricContext) {
+    /**
+     * Abstract fabric service
+     *
+     * @param fabricContext fabric context
+     */
+    public AbstractFabricService(FabricContext fabricContext) {
 		super(fabricContext);
 	}
 

@@ -1,25 +1,62 @@
 package io.github.ecsoya.fabric;
 
+/**
+ * <p>
+ * The type Fabric exception.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 public class FabricException extends RuntimeException {
 
-	private static final long serialVersionUID = -6755525873084547174L;
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = -6755525873084547174L;
 
-	public FabricException() {
+    /**
+     * Fabric exception
+     */
+    public FabricException() {
 	}
 
-	public FabricException(String message) {
+    /**
+     * Fabric exception
+     *
+     * @param message message
+     */
+    public FabricException(String message) {
 		super(message);
 	}
 
-	public FabricException(Throwable cause) {
+    /**
+     * Fabric exception
+     *
+     * @param cause cause
+     */
+    public FabricException(Throwable cause) {
 		super(cause);
 	}
 
-	public FabricException(String message, Throwable cause) {
+    /**
+     * Fabric exception
+     *
+     * @param message message
+     * @param cause   cause
+     */
+    public FabricException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public FabricException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    /**
+     * Fabric exception
+     *
+     * @param message            message
+     * @param cause              cause
+     * @param enableSuppression  enable suppression
+     * @param writableStackTrace writable stack trace
+     */
+    public FabricException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 

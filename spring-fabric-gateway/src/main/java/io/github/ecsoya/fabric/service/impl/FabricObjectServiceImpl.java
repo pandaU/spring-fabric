@@ -11,8 +11,20 @@ import io.github.ecsoya.fabric.chaincode.FunctionType;
 import io.github.ecsoya.fabric.config.FabricContext;
 import io.github.ecsoya.fabric.service.IFabricObjectService;
 
+/**
+ * <p>
+ * The type Fabric object service.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 public class FabricObjectServiceImpl extends AbstractFabricService<FabricObject> implements IFabricObjectService {
 
+	/**
+	 * Fabric object service
+	 *
+	 * @param fabricContext fabric context
+	 */
 	public FabricObjectServiceImpl(FabricContext fabricContext) {
 		super(fabricContext);
 	}

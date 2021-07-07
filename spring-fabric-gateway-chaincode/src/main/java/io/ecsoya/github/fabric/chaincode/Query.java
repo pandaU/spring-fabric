@@ -6,28 +6,69 @@ import java.util.Objects;
 import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 
+/**
+ * <p>
+ * The type Query.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @DataType
 public class Query {
 
-	@Property
+    /**
+     * Data
+     */
+    @Property
 	private String[] data;
 
-	@Property
+    /**
+     * Meta
+     */
+    @Property
 	private QueryMeta meta;
 
-	public String[] getData() {
+    /**
+     * Get data string [ ].
+     *
+     * @return the string [ ]
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:00
+     */
+    public String[] getData() {
 		return data;
 	}
 
-	public void setData(String[] data) {
+    /**
+     * Sets data.
+     *
+     * @param data the data
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:00
+     */
+    public void setData(String[] data) {
 		this.data = data;
 	}
 
-	public QueryMeta getMeta() {
+    /**
+     * Gets meta.
+     *
+     * @return the meta
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:00
+     */
+    public QueryMeta getMeta() {
 		return meta;
 	}
 
-	public void setMeta(QueryMeta meta) {
+    /**
+     * Sets meta.
+     *
+     * @param meta the meta
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:00
+     */
+    public void setMeta(QueryMeta meta) {
 		this.meta = meta;
 	}
 

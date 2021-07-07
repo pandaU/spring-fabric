@@ -2,22 +2,53 @@ package io.github.ecsoya.fabric.config;
 
 import lombok.Data;
 
+/**
+ * <p>
+ * The type Fabric chaincode function properties.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @Data
 public class FabricChaincodeFunctionProperties {
 
-	private String create = "create";
+    /**
+     * Create
+     */
+    private String create = "create";
 
-	private String get = "get";
+    /**
+     * Get
+     */
+    private String get = "get";
 
-	private String delete = "delete";
+    /**
+     * Delete
+     */
+    private String delete = "delete";
 
-	private String update = "update";
+    /**
+     * Update
+     */
+    private String update = "update";
 
-	private String query = "query";
+    /**
+     * Query
+     */
+    private String query = "query";
 
-	private String history = "history";
+    /**
+     * History
+     */
+    private String history = "history";
 
-	private String count = "count";
+    /**
+     * Count
+     */
+    private String count = "count";
 
-	private String exists = "exists";
+    /**
+     * Exists
+     */
+    private String exists = "exists";
 }

@@ -4,24 +4,32 @@ import io.github.ecsoya.fabric.utils.TypeResolver;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * <p>
+ * The type Fabric pagination query.
+ *
+ * @param <T> the type parameter
+ * @author XieXiongXiong
+ * @date 2021 -07-07  *
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class FabricPaginationQuery<T> extends FabricQuery {
 
-	/**
-	 * The bookmark of page querying.
-	 */
-	private String bookmark = "";
+    /**
+     * The bookmark of page querying.
+     */
+    private String bookmark = "";
 
-	/**
-	 * Size of each page.
-	 */
-	private int pageSize = 10;
+    /**
+     * Size of each page.
+     */
+    private int pageSize = 10;
 
-	/**
-	 * Current page of querying
-	 */
-	private int currentPage;
+    /**
+     * Current page of querying
+     */
+    private int currentPage;
 
 	@Override
 	public String getType() {

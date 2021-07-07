@@ -26,7 +26,7 @@ public class SpringFabricProperties extends FabricProperties {
 		InputStream contents = super.getNetworkContents();
 		if (contents == null && network != null) {
 			String file = network.getFile();
-			if (file != null && !file.equals("")) {
+			if (file != null && !"".equals(file)) {
 				ClassPathResource resource = new ClassPathResource(file);
 				try {
 					return resource.getInputStream();

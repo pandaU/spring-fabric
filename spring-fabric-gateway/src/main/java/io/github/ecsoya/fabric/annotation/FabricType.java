@@ -7,6 +7,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * <p>
+ * The interface Fabric type.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @Retention(RUNTIME)
 @Target({ FIELD, METHOD })
 public @interface FabricType {

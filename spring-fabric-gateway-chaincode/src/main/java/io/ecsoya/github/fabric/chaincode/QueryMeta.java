@@ -5,28 +5,69 @@ import java.util.Objects;
 import org.hyperledger.fabric.contract.annotation.DataType;
 import org.hyperledger.fabric.contract.annotation.Property;
 
+/**
+ * <p>
+ * The type Query meta.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @DataType
 public class QueryMeta {
 
-	@Property
+    /**
+     * Records count
+     */
+    @Property
 	private Integer recordsCount;
 
-	@Property
+    /**
+     * Bookmark
+     */
+    @Property
 	private String bookmark;
 
-	public Integer getRecordsCount() {
+    /**
+     * Gets records count.
+     *
+     * @return the records count
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public Integer getRecordsCount() {
 		return recordsCount;
 	}
 
-	public void setRecordsCount(Integer recordsCount) {
+    /**
+     * Sets records count.
+     *
+     * @param recordsCount the records count
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public void setRecordsCount(Integer recordsCount) {
 		this.recordsCount = recordsCount;
 	}
 
-	public String getBookmark() {
+    /**
+     * Gets bookmark.
+     *
+     * @return the bookmark
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public String getBookmark() {
 		return bookmark;
 	}
 
-	public void setBookmark(String bookmark) {
+    /**
+     * Sets bookmark.
+     *
+     * @param bookmark the bookmark
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:01
+     */
+    public void setBookmark(String bookmark) {
 		this.bookmark = bookmark;
 	}
 

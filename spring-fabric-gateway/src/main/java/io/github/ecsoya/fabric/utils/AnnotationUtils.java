@@ -7,12 +7,32 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+/**
+ * <p>
+ * The type Annotation utils.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 public class AnnotationUtils {
 
-	private AnnotationUtils() {
+    /**
+     * Annotation utils
+     */
+    private AnnotationUtils() {
 	}
 
-	public static <A extends Annotation> AnnotatedElement getAnnotatedElement(Class<?> clazz, Class<A> annotationType) {
+    /**
+     * Gets annotated element.
+     *
+     * @param <A>            the type parameter
+     * @param clazz          the clazz
+     * @param annotationType the annotation type
+     * @return the annotated element
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:17
+     */
+    public static <A extends Annotation> AnnotatedElement getAnnotatedElement(Class<?> clazz, Class<A> annotationType) {
 		if (clazz == null || annotationType == null) {
 			return null;
 		}
@@ -44,7 +64,17 @@ public class AnnotationUtils {
 		return element;
 	}
 
-	public static <A extends Annotation> AnnotatedElement getType(Class<?> clazz, Class<A> annotationType) {
+    /**
+     * Gets type.
+     *
+     * @param <A>            the type parameter
+     * @param clazz          the clazz
+     * @param annotationType the annotation type
+     * @return the type
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:17
+     */
+    public static <A extends Annotation> AnnotatedElement getType(Class<?> clazz, Class<A> annotationType) {
 		if (clazz == null || annotationType == null) {
 			return null;
 		}
@@ -54,7 +84,17 @@ public class AnnotationUtils {
 		return null;
 	}
 
-	public static <A extends Annotation> AnnotatedElement getField(Class<?> clazz, Class<A> annotationType) {
+    /**
+     * Gets field.
+     *
+     * @param <A>            the type parameter
+     * @param clazz          the clazz
+     * @param annotationType the annotation type
+     * @return the field
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:17
+     */
+    public static <A extends Annotation> AnnotatedElement getField(Class<?> clazz, Class<A> annotationType) {
 		if (clazz == null || annotationType == null) {
 			return null;
 		}
@@ -67,7 +107,17 @@ public class AnnotationUtils {
 		return null;
 	}
 
-	public static <A extends Annotation> AnnotatedElement getMethod(Class<?> clazz, Class<A> annotationType) {
+    /**
+     * Gets method.
+     *
+     * @param <A>            the type parameter
+     * @param clazz          the clazz
+     * @param annotationType the annotation type
+     * @return the method
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:17
+     */
+    public static <A extends Annotation> AnnotatedElement getMethod(Class<?> clazz, Class<A> annotationType) {
 		if (clazz == null || annotationType == null) {
 			return null;
 		}
@@ -80,7 +130,18 @@ public class AnnotationUtils {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+    /**
+     * Gets value.
+     *
+     * @param <T>              the type parameter
+     * @param object           the object
+     * @param annotatedElement the annotated element
+     * @param type             the type
+     * @return the value
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:17
+     */
+    @SuppressWarnings("unchecked")
 	public static <T> T getValue(Object object, AnnotatedElement annotatedElement, Class<T> type) {
 		if (object == null || annotatedElement == null || type == null) {
 			return null;

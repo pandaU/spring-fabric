@@ -12,16 +12,30 @@ import io.github.ecsoya.fabric.bean.FabricBlock;
 import io.github.ecsoya.fabric.bean.FabricHistory;
 import io.github.ecsoya.fabric.bean.FabricLedger;
 import io.github.ecsoya.fabric.bean.FabricTransaction;
-import io.github.ecsoya.fabric.bean.FabricTransactionRWSet;
 import io.github.ecsoya.fabric.chaincode.FunctionType;
 import io.github.ecsoya.fabric.config.FabricContext;
 import io.github.ecsoya.fabric.service.IFabricInfoService;
 import io.github.ecsoya.fabric.utils.FabricUtil;
 
+/**
+ * <p>
+ * The type Fabric info service.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 public class FabricInfoServiceImpl implements IFabricInfoService {
 
+	/**
+	 * Fabric context
+	 */
 	private FabricContext fabricContext;
 
+	/**
+	 * Fabric info service
+	 *
+	 * @param fabricContext fabric context
+	 */
 	public FabricInfoServiceImpl(FabricContext fabricContext) {
 		this.fabricContext = fabricContext;
 	}
@@ -45,9 +59,9 @@ public class FabricInfoServiceImpl implements IFabricInfoService {
 	}
 
 	@Override
-	public FabricQueryResponse<FabricBlock> queryBlockByTransactionID(String txId) {
+	public FabricQueryResponse<FabricBlock> queryBlockByTransactionId(String txId) {
 		try {
-			return fabricContext.queryBlockByTransactionID(txId);
+			return fabricContext.queryBlockByTransactionId(txId);
 		} catch (Exception e) {
 			return FabricQueryResponse.failure(e.getLocalizedMessage());
 		}
@@ -82,7 +96,7 @@ public class FabricInfoServiceImpl implements IFabricInfoService {
 			int pageSize = query.getPageSize();
 
 			byte[] startHash = null;
-			if (bookmark != null && !bookmark.equals("")) {
+			if (bookmark != null && !"".equals(bookmark)) {
 				startHash = FabricUtil.stringToHash(bookmark);
 			}
 
@@ -102,7 +116,7 @@ public class FabricInfoServiceImpl implements IFabricInfoService {
 					}
 					FabricBlock block = queryResp.data;
 					if (block == null) {
-						noMore = true; // no more
+						noMore = true;
 						break;
 					}
 					block.setCurrentHash(FabricUtil.hashToString(startHash));
@@ -139,9 +153,9 @@ public class FabricInfoServiceImpl implements IFabricInfoService {
 	}
 
 	@Override
-	public FabricQueryResponse<String> queryTransactionRWSet(String txId) {
+	public FabricQueryResponse<String> queryTransactionRwSet(String txId) {
 		try {
-			return fabricContext.queryTransactionRWSet(txId);
+			return fabricContext.queryTransactionRwSet(txId);
 		} catch (Exception e) {
 			return FabricQueryResponse.failure(e.getLocalizedMessage());
 		}

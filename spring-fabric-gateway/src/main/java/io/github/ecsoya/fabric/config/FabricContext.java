@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +19,6 @@ import org.hyperledger.fabric.gateway.Network;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.Wallets;
 import org.hyperledger.fabric.gateway.impl.ContractImpl;
-import org.hyperledger.fabric.protos.ledger.rwset.kvrwset.KvRwset;
 import org.hyperledger.fabric.protos.peer.TransactionPackage.TxValidationCode;
 import org.hyperledger.fabric.sdk.*;
 import org.hyperledger.fabric.sdk.BlockInfo.EnvelopeInfo;
@@ -40,8 +37,6 @@ import org.hyperledger.fabric_ca.sdk.exception.EnrollmentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-
 import io.github.ecsoya.fabric.FabricException;
 import io.github.ecsoya.fabric.FabricQueryRequest;
 import io.github.ecsoya.fabric.FabricQueryResponse;
@@ -51,21 +46,50 @@ import io.github.ecsoya.fabric.bean.FabricBlock;
 import io.github.ecsoya.fabric.bean.FabricHistory;
 import io.github.ecsoya.fabric.bean.FabricLedger;
 import io.github.ecsoya.fabric.bean.FabricTransaction;
-import io.github.ecsoya.fabric.bean.FabricTransactionRWSet;
 import io.github.ecsoya.fabric.chaincode.FunctionType;
 import io.github.ecsoya.fabric.gateway.FabricContract;
 
+/**
+ * <p>
+ * The type Fabric context.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 public class FabricContext {
+	/**
+	 * Logger
+	 */
 	private Logger logger = LoggerFactory.getLogger(FabricContext.class);
 
+	/**
+	 * IS_WIN
+	 */
 	private static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().contains("win");
 
+	/**
+	 * Properties
+	 */
 	private final FabricProperties properties;
 
+	/**
+	 * Builder
+	 */
 	private Gateway.Builder builder;
+	/**
+	 * Network
+	 */
 	private Network network;
+	/**
+	 * Contract
+	 */
 	private FabricContract contract;
 
+	/**
+	 * Fabric context
+	 *
+	 * @param properties properties
+	 */
 	public FabricContext(FabricProperties properties) {
 		this.properties = properties;
 		if (properties == null) {
@@ -73,10 +97,25 @@ public class FabricContext {
 		}
 	}
 
+	/**
+	 * Gets properties.
+	 *
+	 * @return the properties
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	public FabricProperties getProperties() {
 		return properties;
 	}
 
+	/**
+	 * Gets function.
+	 *
+	 * @param type the type
+	 * @return the function
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	public String getFunction(FunctionType type) {
 		if (type == null) {
 			return null;
@@ -115,6 +154,13 @@ public class FabricContext {
 		return null;
 	}
 
+	/**
+	 * Initialize.
+	 *
+	 * @throws FabricException the fabric exception
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	@PostConstruct
 	private void initialize() throws FabricException {
 
@@ -123,13 +169,13 @@ public class FabricContext {
 		logger.debug("Initialize Fabric Context with properties: " + properties);
 
 		String channel = properties.getChannel();
-		if (channel == null || channel.equals("")) {
+		if (channel == null || "".equals(channel)) {
 			throw new FabricException(
 					"Initialize fabric gateway failed with invalid 'channel' name. Please make sure the channel is configured corrected by 'spring.fabric.channel'.");
 		}
 
 		FabricChaincodeProperties chaincode = properties.getChaincode();
-		if (chaincode == null || chaincode.getIdentify() == null || chaincode.getIdentify().equals("")) {
+		if (chaincode == null || chaincode.getIdentify() == null || "".equals(chaincode.getIdentify())) {
 			throw new FabricException(
 					"Initialize fabric gateway failed with invalid 'chaincode' name. Please make sure the chaincode is configured corrected by 'spring.fabric.chaincode'.");
 		}
@@ -160,7 +206,7 @@ public class FabricContext {
 		FabricWalletProperties walletProps = gatewayProps.getWallet();
 
 		String identityName = walletProps.getIdentity();
-		if (identityName == null || identityName.equals("")) {
+		if (identityName == null || "".equals(identityName)) {
 			identityName = "admin";
 			logger.debug("Initialize Fabric Context: missing identity for wallet, and using default value: admin");
 		}
@@ -197,6 +243,15 @@ public class FabricContext {
 
 	}
 
+	/**
+	 * Create wallet wallet.
+	 *
+	 * @param networkConfig the network config
+	 * @param walletConfig  the wallet config
+	 * @return the wallet
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	private Wallet createWallet(NetworkConfig networkConfig, FabricWalletProperties walletConfig) {
 		Wallet wallet = newFileSystemWallet(walletConfig);
 		if (wallet == null) {
@@ -205,8 +260,16 @@ public class FabricContext {
 		return wallet;
 	}
 
+	/**
+	 * New file system wallet wallet.
+	 *
+	 * @param config the config
+	 * @return the wallet
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	private Wallet newFileSystemWallet(FabricWalletProperties config) {
-		if (config == null || config.isMemory() || config.getFile() == null || config.getFile().equals("")) {
+		if (config == null || config.isMemory() || config.getFile() == null || "".equals(config.getFile())) {
 			return null;
 		} else {
 			try {
@@ -217,11 +280,20 @@ public class FabricContext {
 		}
 	}
 
+	/**
+	 * New in memory wallet wallet.
+	 *
+	 * @param network     the network
+	 * @param walletProps the wallet props
+	 * @return the wallet
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	private Wallet newInMemoryWallet(NetworkConfig network, FabricWalletProperties walletProps) {
 		Wallet wallet = Wallets.newInMemoryWallet();
 		if (network != null) {
 			String identityName = walletProps.getIdentity();
-			if (identityName == null || identityName.equals("")) {
+			if (identityName == null || "".equals(identityName)) {
 				identityName = "admin";
 				logger.debug("Initialize Fabric Context: missing identity for wallet, and using default value: admin");
 			}
@@ -242,7 +314,7 @@ public class FabricContext {
 				}else {
 					try {
 						Enrollment enrollment = adminEnroll(walletProps.getCaUrl(), walletProps.getCaFile(), walletProps.getCaHost(), walletProps.getIdentity(), walletProps.getIdentityPw());
-						Identity admin = Identities.newX509Identity(walletProps.getCaMSP(), enrollment);
+						Identity admin = Identities.newX509Identity(walletProps.getCaMsp(), enrollment);
 						wallet.put(identityName, admin);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -252,7 +324,30 @@ public class FabricContext {
 		}
 		return wallet;
 	}
-    private Enrollment adminEnroll(String caUrl, String file, String host, String user, String userPw) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, CryptoException, InvalidArgumentException, EnrollmentException, org.hyperledger.fabric_ca.sdk.exception.InvalidArgumentException {
+
+	/**
+	 * Admin enroll enrollment.
+	 *
+	 * @param caUrl  the ca url
+	 * @param file   the file
+	 * @param host   the host
+	 * @param user   the user
+	 * @param userPw the user pw
+	 * @return the enrollment
+	 * @throws IOException               the io exception
+	 * @throws ClassNotFoundException    the class not found exception
+	 * @throws NoSuchMethodException     the no such method exception
+	 * @throws InvocationTargetException the invocation target exception
+	 * @throws InstantiationException    the instantiation exception
+	 * @throws IllegalAccessException    the illegal access exception
+	 * @throws CryptoException           the crypto exception
+	 * @throws InvalidArgumentException  the invalid argument exception
+	 * @throws EnrollmentException       the enrollment exception
+	 * @throws InvalidArgumentException  the invalid argument exception
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
+	private Enrollment adminEnroll(String caUrl, String file, String host, String user, String userPw) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, CryptoException, InvalidArgumentException, EnrollmentException, org.hyperledger.fabric_ca.sdk.exception.InvalidArgumentException {
 		Properties props = new Properties();
 		String path = Thread.currentThread().getContextClassLoader().getResource(file).getPath();
 		if (IS_WIN){
@@ -265,12 +360,20 @@ public class FabricContext {
 		CryptoSuite cryptoSuite = CryptoSuiteFactory.getDefault().getCryptoSuite();
 		caClient.setCryptoSuite(cryptoSuite);
 		// Enroll he admin user, and import the new identity into the wallet.
-		final EnrollmentRequest enrollmentRequestTLS = new EnrollmentRequest();
-		enrollmentRequestTLS.addHost(host);
-		enrollmentRequestTLS.setProfile("tls");
-		Enrollment enrollment = caClient.enroll(user, userPw, enrollmentRequestTLS);
+		final EnrollmentRequest enrollmentRequestTls = new EnrollmentRequest();
+		enrollmentRequestTls.addHost(host);
+		enrollmentRequestTls.setProfile("tls");
+		Enrollment enrollment = caClient.enroll(user, userPw, enrollmentRequestTls);
 		return enrollment;
 	}
+
+	/**
+	 * Gets contract.
+	 *
+	 * @return the contract
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	private FabricContract getContract() {
 		if (contract == null) {
 			if (network == null) {
@@ -287,6 +390,15 @@ public class FabricContext {
 		return contract;
 	}
 
+	/**
+	 * Query fabric query response.
+	 *
+	 * @param <T>          the type parameter
+	 * @param queryRequest the query request
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	public <T> FabricQueryResponse<T> query(FabricQueryRequest<T> queryRequest) {
 		if (queryRequest == null) {
 			return FabricQueryResponse.failure("Query request can not be null.");
@@ -305,6 +417,17 @@ public class FabricContext {
 		}
 	}
 
+	/**
+	 * Query array fabric query response.
+	 *
+	 * @param <T>       the type parameter
+	 * @param type      the type
+	 * @param function  the function
+	 * @param arguments the arguments
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	public <T> FabricQueryResponse<List<T>> queryArray(Class<T> type, String function, String... arguments) {
 		try {
 			FabricQueryRequest<T> request = new FabricQueryRequest<T>(type, function, arguments);
@@ -315,6 +438,15 @@ public class FabricContext {
 
 	}
 
+	/**
+	 * Query many fabric query response.
+	 *
+	 * @param <T>          the type parameter
+	 * @param queryRequest the query request
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	public <T> FabricQueryResponse<List<T>> queryMany(FabricQueryRequest<T> queryRequest) {
 		if (queryRequest == null) {
 			return FabricQueryResponse.failure("Query request can not be null.");
@@ -344,6 +476,14 @@ public class FabricContext {
 		}
 	}
 
+	/**
+	 * Query block info block info.
+	 *
+	 * @param txid the txid
+	 * @return the block info
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	private BlockInfo queryBlockInfo(String txid) {
 		if (txid == null) {
 			return null;
@@ -359,6 +499,14 @@ public class FabricContext {
 		}
 	}
 
+	/**
+	 * Execute fabric response.
+	 *
+	 * @param request the request
+	 * @return the fabric response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	public FabricResponse execute(FabricRequest request) {
 		if (request == null) {
 			return FabricResponse.fail("Request can not be null");
@@ -373,6 +521,13 @@ public class FabricContext {
 		}
 	}
 
+	/**
+	 * Query blockchain info fabric query response.
+	 *
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	public FabricQueryResponse<FabricLedger> queryBlockchainInfo() {
 		try {
 			if (network == null) {
@@ -398,6 +553,14 @@ public class FabricContext {
 		}
 	}
 
+	/**
+	 * Query block by number fabric query response.
+	 *
+	 * @param blockNumber the block number
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	public FabricQueryResponse<FabricBlock> queryBlockByNumber(long blockNumber) {
 		try {
 			if (network == null) {
@@ -413,7 +576,15 @@ public class FabricContext {
 		}
 	}
 
-	public FabricQueryResponse<FabricBlock> queryBlockByTransactionID(String txId) {
+	/**
+	 * Query block by transaction id fabric query response.
+	 *
+	 * @param txId the tx id
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
+	public FabricQueryResponse<FabricBlock> queryBlockByTransactionId(String txId) {
 		try {
 			if (network == null) {
 				getContract();
@@ -427,6 +598,14 @@ public class FabricContext {
 		}
 	}
 
+	/**
+	 * Query block by hash fabric query response.
+	 *
+	 * @param blockHash the block hash
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	public FabricQueryResponse<FabricBlock> queryBlockByHash(byte[] blockHash) {
 		try {
 			if (network == null) {
@@ -442,6 +621,14 @@ public class FabricContext {
 		}
 	}
 
+	/**
+	 * Query transactions fabric query response.
+	 *
+	 * @param blockNumber the block number
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
 	public FabricQueryResponse<List<FabricTransaction>> queryTransactions(long blockNumber) {
 		try {
 			if (network == null) {
@@ -487,7 +674,15 @@ public class FabricContext {
 		}
 	}
 
-	public FabricQueryResponse<String> queryTransactionRWSet(String txId) {
+	/**
+	 * Query transaction rw set fabric query response.
+	 *
+	 * @param txId the tx id
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:17
+	 */
+	public FabricQueryResponse<String> queryTransactionRwSet(String txId) {
 		try {
 			if (network == null) {
 				getContract();
@@ -499,39 +694,20 @@ public class FabricContext {
 			if (block == null) {
 				return FabricQueryResponse.failure("Unable to query block from txId=" + txId);
 			}
-			/*TransactionEnvelopeInfo envelopeInfo = null;
-			Iterator<EnvelopeInfo> iterator = block.getEnvelopeInfos().iterator();
-			while (iterator.hasNext()) {
-				BlockInfo.EnvelopeInfo info = iterator.next();
-				if (info.getTransactionID().equals(txId) && info instanceof TransactionEnvelopeInfo) {
-					envelopeInfo = (TransactionEnvelopeInfo) info;
-					break;
-				}
-			}
-			FabricTransactionRWSet rwSet = new FabricTransactionRWSet();
-			if (envelopeInfo != null) {
-				envelopeInfo.getTransactionActionInfos().forEach(action -> {
-					TxReadWriteSetInfo txReadWriteSet = action.getTxReadWriteSet();
-					txReadWriteSet.getNsRwsetInfos().forEach(info -> {
-						String namespace = info.getNamespace();
-						if ("lscc".equals(namespace)) {
-							return;
-						}
-						try {
-							List<KvRwset.KVWrite> writesList = info.getRwset().getWritesList();
-							rwSet.setWrites(writesList);
-							rwSet.setReads(info.getRwset().getReadsList());
-						} catch (InvalidProtocolBufferException e) {
-						}
-					});
-				});
-			}*/
 			return FabricQueryResponse.success(block.getBlock().getData().toByteString().toStringUtf8());
 		} catch (Exception e) {
 			return FabricQueryResponse.failure(e.getLocalizedMessage());
 		}
 	}
 
+	/**
+	 * Query transaction info fabric query response.
+	 *
+	 * @param txId the tx id
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:18
+	 */
 	public FabricQueryResponse<FabricTransaction> queryTransactionInfo(String txId) {
 		try {
 			if (network == null) {

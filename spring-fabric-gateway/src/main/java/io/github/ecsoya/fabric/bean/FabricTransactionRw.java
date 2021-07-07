@@ -14,40 +14,52 @@ import lombok.Data;
 
 /**
  * Fabric transaction reads/writes.
- * 
- * @author ecsoya
  *
+ * @author ecsoya
+ * @date 2021 -07-07
  */
 @Data
-public class FabricTransactionRW {
+public class FabricTransactionRw {
 
-	private int index;
+    /**
+     * Index
+     */
+    private int index;
 
-	/**
-	 * Type of {@link IFabricObject}
-	 */
-	private String type = "";
+    /**
+     * Type of {@link IFabricObject}
+     */
+    private String type = "";
 
-	/**
-	 * Id of {@link IFabricObject}
-	 */
-	private String key = "";
+    /**
+     * Id of {@link IFabricObject}
+     */
+    private String key = "";
 
-	/**
-	 * Stringify value of values for {@link IFabricObject}
-	 */
-	private String value = "";
+    /**
+     * Stringify value of values for {@link IFabricObject}
+     */
+    private String value = "";
 
-	/**
-	 * Is deleted or not for Writes.
-	 */
-	private String remarks = "";
+    /**
+     * Is deleted or not for Writes.
+     */
+    private String remarks = "";
 
-	public static FabricTransactionRW fromRead(int index, KVRead read) {
+    /**
+     * From read fabric transaction rw.
+     *
+     * @param index the index
+     * @param read  the read
+     * @return the fabric transaction rw
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:14
+     */
+    public static FabricTransactionRw fromRead(int index, KVRead read) {
 		if (read == null) {
 			return null;
 		}
-		FabricTransactionRW txRead = new FabricTransactionRW();
+		FabricTransactionRw txRead = new FabricTransactionRw();
 		txRead.setIndex(index);
 		String key = read.getKey();
 		String[] split = key.split(DELIMITER, 0);
@@ -64,11 +76,20 @@ public class FabricTransactionRW {
 		return txRead;
 	}
 
-	public static FabricTransactionRW fromWrite(int index, KVWrite write) {
+    /**
+     * From write fabric transaction rw.
+     *
+     * @param index the index
+     * @param write the write
+     * @return the fabric transaction rw
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:14
+     */
+    public static FabricTransactionRw fromWrite(int index, KVWrite write) {
 		if (write == null) {
 			return null;
 		}
-		FabricTransactionRW txWrite = new FabricTransactionRW();
+		FabricTransactionRw txWrite = new FabricTransactionRw();
 		txWrite.setIndex(index);
 		String compositeKey = write.getKey();
 		String[] split = compositeKey.split(DELIMITER, 0);
@@ -83,10 +104,15 @@ public class FabricTransactionRW {
 		return txWrite;
 	}
 
-	/**
-	 * Try to extract 'values' from given value for {@link IFabricObject}.
-	 */
-	private static String simplifier(String value) {
+    /**
+     * Try to extract 'values' from given value for {@link IFabricObject}.
+     *
+     * @param value the value
+     * @return the string
+     * @author XieXiongXiong
+     * @date 2021 -07-07 10:34:14
+     */
+    private static String simplifier(String value) {
 		try {
 			JsonParser parser = new JsonParser();
 			JsonElement tree = parser.parse(value);
@@ -104,5 +130,8 @@ public class FabricTransactionRW {
 
 	}
 
-	private static final String DELIMITER = new String(Character.toChars(Character.MIN_CODE_POINT));
+    /**
+     * DELIMITER
+     */
+    private static final String DELIMITER = new String(Character.toChars(Character.MIN_CODE_POINT));
 }

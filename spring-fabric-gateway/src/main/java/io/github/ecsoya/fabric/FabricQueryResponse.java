@@ -20,21 +20,56 @@ import com.google.gson.JsonSyntaxException;
 import io.github.ecsoya.fabric.json.FabricGson;
 import io.github.ecsoya.fabric.utils.FabricUtil;
 
+/**
+ * <p>
+ * The type Fabric query response.
+ *
+ * @param <T> the type parameter
+ * @author XieXiongXiong
+ * @date 2021 -07-07  *
+ */
 public class FabricQueryResponse<T> extends FabricResponse {
 
+	/**
+	 * Data
+	 */
 	public final T data;
 
+	/**
+	 * Metadata
+	 */
 	public FabricQueryResponseMetadata metadata;
 
+	/**
+	 * Fabric query response
+	 *
+	 * @param status   status
+	 * @param errorMsg error msg
+	 * @param data     data
+	 */
 	public FabricQueryResponse(int status, String errorMsg, T data) {
 		super(status, errorMsg);
 		this.data = data;
 	}
 
+	/**
+	 * Gets metadata.
+	 *
+	 * @return the metadata
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public FabricQueryResponseMetadata getMetadata() {
 		return metadata;
 	}
 
+	/**
+	 * Sets metadata.
+	 *
+	 * @param metadata the metadata
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public void setMetadata(FabricQueryResponseMetadata metadata) {
 		this.metadata = metadata;
 	}
@@ -47,14 +82,41 @@ public class FabricQueryResponse<T> extends FabricResponse {
 		return super.isOk(all);
 	}
 
+	/**
+	 * Failure fabric query response.
+	 *
+	 * @param <T>      the type parameter
+	 * @param errorMsg the error msg
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public static <T> FabricQueryResponse<T> failure(String errorMsg) {
 		return new FabricQueryResponse<>(FAILURE, errorMsg, null);
 	}
 
+	/**
+	 * Success fabric query response.
+	 *
+	 * @param <T>  the type parameter
+	 * @param data the data
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public static <T> FabricQueryResponse<T> success(T data) {
 		return new FabricQueryResponse<T>(SUCCESS, null, data);
 	}
 
+	/**
+	 * Build fabric query response.
+	 *
+	 * @param <T>  the type parameter
+	 * @param data the data
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public static <T> FabricQueryResponse<T> build(T data) {
 		if (data == null) {
 			return failure(null);
@@ -62,6 +124,16 @@ public class FabricQueryResponse<T> extends FabricResponse {
 		return success(data);
 	}
 
+	/**
+	 * Create fabric query response.
+	 *
+	 * @param <T>  the type parameter
+	 * @param res  the res
+	 * @param type the type
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public static <T> FabricQueryResponse<T> create(ProposalResponse res, Class<T> type) {
 		Status status = res.getStatus();
 		if (status != Status.SUCCESS) {
@@ -86,6 +158,16 @@ public class FabricQueryResponse<T> extends FabricResponse {
 		}
 	}
 
+	/**
+	 * Create fabric query response.
+	 *
+	 * @param <T>     the type parameter
+	 * @param payload the payload
+	 * @param type    the type
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	public static <T> FabricQueryResponse<T> create(byte[] payload, Class<T> type) {
 		if (payload == null) {
 			return success(null);
@@ -94,6 +176,16 @@ public class FabricQueryResponse<T> extends FabricResponse {
 		return success(payloadData);
 	}
 
+	/**
+	 * Parse payload t.
+	 *
+	 * @param <T>   the type parameter
+	 * @param value the value
+	 * @param type  the type
+	 * @return the t
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:21
+	 */
 	@SuppressWarnings("unchecked")
 	private static <T> T parsePayload(String value, Class<T> type) {
 		if (value == null) {
@@ -113,12 +205,22 @@ public class FabricQueryResponse<T> extends FabricResponse {
 			} catch (Exception e) {
 				return null;
 			}
-		} else if (!value.equals("")) {
+		} else if (!"".equals(value)) {
 			return FabricUtil.build(value, type);
 		}
 		return null;
 	}
 
+	/**
+	 * Many fabric query response.
+	 *
+	 * @param <T>  the type parameter
+	 * @param res  the res
+	 * @param type the type
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:22
+	 */
 	public static <T> FabricQueryResponse<List<T>> many(ProposalResponse res, Class<T> type) {
 		Status status = res.getStatus();
 		if (status != Status.SUCCESS) {
@@ -142,11 +244,31 @@ public class FabricQueryResponse<T> extends FabricResponse {
 		}
 	}
 
+	/**
+	 * Many fabric query response.
+	 *
+	 * @param <T>      the type parameter
+	 * @param payloads the payloads
+	 * @param type     the type
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:22
+	 */
 	public static <T> FabricQueryResponse<List<T>> many(byte[] payloads, Class<T> type) {
 		String json = new String(payloads, Charset.forName("utf-8"));
 		return parsePayloadMany(json, type);
 	}
 
+	/**
+	 * Parse payload many fabric query response.
+	 *
+	 * @param <T>  the type parameter
+	 * @param json the json
+	 * @param type the type
+	 * @return the fabric query response
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 10:34:22
+	 */
 	private static <T> FabricQueryResponse<List<T>> parsePayloadMany(String json, Class<T> type) {
 		try {
 			JsonParser parser = new JsonParser();

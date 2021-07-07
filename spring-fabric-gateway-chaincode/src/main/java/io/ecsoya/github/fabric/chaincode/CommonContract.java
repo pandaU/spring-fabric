@@ -23,19 +23,33 @@ import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIteratorWithMetadata;
 
+/**
+ * <p>
+ * The type Common contract.
+ *
+ * @author XieXiongXiong
+ * @date 2021 -07-07
+ */
 @Contract(name = "CommonContract", info = @Info(title = "Spring-Fabric-Gateway Common Contract", description = "The common contract with CRUD actions...", version = "1.0.0", license = @License(name = "Apache 2.0 License", url = "http://www.apache.org/licenses/LICENSE-2.0.html"), contact = @Contact(email = "angryred@qq.com", name = "angryred", url = "https://ecsoya.github.io/fabric/")))
 @Default
 public class CommonContract implements ContractInterface {
 
+	/**
+	 * log
+	 */
 	private static final Logger log = Logger.getLogger(CommonContract.class);
+	/**
+	 * OBJECT_TYPE
+	 */
 	private static final String OBJECT_TYPE = "type~key";
 
 	/**
-	 * 
 	 * Initialize
-	 * 
-	 * @param context
-	 * @return Chaincode.Response
+	 *
+	 * @param context the context
+	 * @return Chaincode.Response string
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 11:38:01
 	 */
 	@Transaction
 	public String init(Context context) {
@@ -43,11 +57,15 @@ public class CommonContract implements ContractInterface {
 	}
 
 	/**
-	 * 
 	 * Create new object with type, key and value.
-	 * 
-	 * @param context
-	 * @return Chaincode.Response
+	 *
+	 * @param context the context
+	 * @param type    the type
+	 * @param key     the key
+	 * @param value   the value
+	 * @return Chaincode.Response boolean
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 11:38:01
 	 */
 	@Transaction
 	public Boolean create(Context context, String type, String key, String value) {
@@ -66,6 +84,16 @@ public class CommonContract implements ContractInterface {
 		return Boolean.TRUE;
 	}
 
+	/**
+	 * Gets composite key.
+	 *
+	 * @param stub the stub
+	 * @param type the type
+	 * @param key  the key
+	 * @return the composite key
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 11:38:01
+	 */
 	private String getCompositeKey(ChaincodeStub stub, String type, String key) {
 		if (type == null || key == null) {
 			throw new ContractRuntimeException("Incorrect number of arguments. At least 2 [type, key, ...]");
@@ -78,11 +106,14 @@ public class CommonContract implements ContractInterface {
 	}
 
 	/**
-	 * 
 	 * Get object with [type, key]
-	 * 
-	 * @param context
-	 * @return Chaincode.Response
+	 *
+	 * @param context the context
+	 * @param type    the type
+	 * @param key     the key
+	 * @return Chaincode.Response byte [ ]
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 11:38:01
 	 */
 	@Transaction
 	public byte[] get(Context context, String type, String key) {
@@ -98,9 +129,14 @@ public class CommonContract implements ContractInterface {
 
 	/**
 	 * Update object with [type, key, value]
-	 * 
-	 * @param context
-	 * @return Chaincode.Response
+	 *
+	 * @param context the context
+	 * @param type    the type
+	 * @param key     the key
+	 * @param value   the value
+	 * @return Chaincode.Response boolean
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 11:38:01
 	 */
 	@Transaction
 	public Boolean update(Context context, String type, String key, String value) {
@@ -120,9 +156,13 @@ public class CommonContract implements ContractInterface {
 
 	/**
 	 * Delete objects
-	 * 
-	 * @param context
-	 * @return Chaincode.Response
+	 *
+	 * @param context the context
+	 * @param type    the type
+	 * @param key     the key
+	 * @return Chaincode.Response boolean
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 11:38:01
 	 */
 	@Transaction
 	public Boolean delete(Context context, String type, String key) {
@@ -139,9 +179,13 @@ public class CommonContract implements ContractInterface {
 
 	/**
 	 * List all
-	 * 
-	 * @param context
-	 * @return Records
+	 *
+	 * @param context  the context
+	 * @param startKey the start key
+	 * @param endKey   the end key
+	 * @return Records record [ ]
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 11:38:01
 	 */
 	@Transaction
 	public Record[] list(Context context, String startKey, String endKey) {
@@ -158,15 +202,20 @@ public class CommonContract implements ContractInterface {
 		stateByRange.forEach(value -> {
 			records.add(new Record(value.getKey(), value.getStringValue()));
 		});
-		log.info("CommonContract.list: " + JSON.stringify(records));
+		log.info("CommonContract.list: " + JsonUtil.stringify(records));
 		return records.toArray(new Record[records.size()]);
 	}
 
 	/**
 	 * Query objects, support couchdb.
-	 * 
-	 * @param context
+	 *
+	 * @param context  the context
+	 * @param query    the query
+	 * @param pageSize the page size
+	 * @param bookmark the bookmark
 	 * @return {@link Query}
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 11:38:01
 	 */
 	@Transaction
 	public Query query(Context context, String query, Integer pageSize, String bookmark) {
@@ -209,11 +258,13 @@ public class CommonContract implements ContractInterface {
 	}
 
 	/**
-	 * 
 	 * Get count of object [query]
-	 * 
-	 * @param context
+	 *
+	 * @param context the context
+	 * @param query   the query
 	 * @return the count of query
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 11:38:01
 	 */
 	@Transaction
 	public Integer count(Context context, String query) {
@@ -240,9 +291,12 @@ public class CommonContract implements ContractInterface {
 
 	/**
 	 * Check exists for query
-	 * 
-	 * @param context
-	 * @return boolean
+	 *
+	 * @param context the context
+	 * @param query   the query
+	 * @return boolean boolean
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 11:38:01
 	 */
 	@Transaction
 	public Boolean exists(Context context, String query) {
@@ -264,11 +318,14 @@ public class CommonContract implements ContractInterface {
 	}
 
 	/**
-	 * 
 	 * Get History of object [type, key]
-	 * 
-	 * @param context
-	 * @return Chaincode.Response
+	 *
+	 * @param context the context
+	 * @param type    the type
+	 * @param key     the key
+	 * @return Chaincode.Response history [ ]
+	 * @author XieXiongXiong
+	 * @date 2021 -07-07 11:38:01
 	 */
 	@Transaction
 	public History[] history(Context context, String type, String key) {
@@ -292,7 +349,7 @@ public class CommonContract implements ContractInterface {
 				histories.add(his);
 			});
 		}
-		log.info("CommonContract.history: " + JSON.stringify(histories));
+		log.info("CommonContract.history: " + JsonUtil.stringify(histories));
 		return histories.toArray(new History[histories.size()]);
 	}
 }
