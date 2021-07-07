@@ -7,13 +7,16 @@ import io.github.ecsoya.fabric.FabricQuery;
 import io.github.ecsoya.fabric.FabricQueryResponse;
 import io.github.ecsoya.fabric.bean.FabricBlock;
 import io.github.ecsoya.fabric.bean.FabricHistory;
-import io.github.ecsoya.fabric.explorer.model.fabric.FabricUserObject;
-import io.github.ecsoya.fabric.explorer.service.FabricUserService;
+import io.github.ecsoya.fabric.explorer.model.fabric.FabricLandObject;
+import io.github.ecsoya.fabric.explorer.service.FabricLandService;
+import io.github.ecsoya.fabric.explorer.util.DateFormatLocal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,13 +27,16 @@ import java.util.List;
  * @date 2021 -07-07
  */
 @RestController
-public class UserController {
+public class LandMonthStatisticsController {
 
     /**
      * Fabric user service
      */
+    private final FabricLandService fabricLandService;
     @Autowired
-    private FabricUserService fabricUserService;
+    public LandMonthStatisticsController(FabricLandService fabricLandService) {
+        this.fabricLandService = fabricLandService;
+    }
 
     /**
      * Create response entity.
@@ -40,9 +46,12 @@ public class UserController {
      * @author XieXiongXiong
      * @date 2021 -07-07 11:38:22
      */
-    @PutMapping("user")
-    public ResponseEntity<?> create(@RequestBody FabricUserObject request){
-        fabricUserService.extCreate(request);
+    @PutMapping("landMonthStatistics")
+    public ResponseEntity<?> create(@RequestBody FabricLandObject request){
+        String current = DateFormatLocal.FM.get().format(new Date());
+        request.setCreateTime(current);
+        request.setUpdateTime(current);
+        fabricLandService.extCreate(request);
         return ResponseEntity.ok().build();
     }
 
@@ -54,9 +63,11 @@ public class UserController {
      * @author XieXiongXiong
      * @date 2021 -07-07 11:38:22
      */
-    @PostMapping("user")
-    public ResponseEntity<?> update(@RequestBody FabricUserObject request){
-        fabricUserService.extUpdate(request);
+    @PostMapping("landMonthStatistics")
+    public ResponseEntity<?> update(@RequestBody FabricLandObject request){
+        String current = DateFormatLocal.FM.get().format(new Date());
+        request.setUpdateTime(current);
+        fabricLandService.extUpdate(request);
         return ResponseEntity.ok().build();
     }
 
@@ -68,9 +79,9 @@ public class UserController {
      * @author XieXiongXiong
      * @date 2021 -07-07 11:38:22
      */
-    @DeleteMapping("user/{id}")
+    @DeleteMapping("landMonthStatistics/{id}")
     public ResponseEntity<?> del(@PathVariable("id") String id){
-        fabricUserService.delete(id, FabricUserObject.TYPE);
+        fabricLandService.delete(id, FabricLandObject.TYPE);
         return ResponseEntity.ok().build();
     }
 
@@ -82,9 +93,9 @@ public class UserController {
      * @author XieXiongXiong
      * @date 2021 -07-07 11:38:22
      */
-    @GetMapping("user/history/{id}")
+    @GetMapping("landMonthStatistics/history/{id}")
     public ResponseEntity<?> update(@PathVariable("id") String id){
-        FabricQueryResponse<List<FabricHistory>> history = fabricUserService.history(id, FabricUserObject.TYPE);
+        FabricQueryResponse<List<FabricHistory>> history = fabricLandService.history(id, FabricLandObject.TYPE);
         return ResponseEntity.ok(history);
     }
 
@@ -96,9 +107,9 @@ public class UserController {
      * @author XieXiongXiong
      * @date 2021 -07-07 11:38:22
      */
-    @GetMapping("user/block/{id}")
+    @GetMapping("landMonthStatistics/block/{id}")
     public ResponseEntity<?> block(@PathVariable("id") String id){
-        FabricBlock block = fabricUserService.extBlock(id, FabricUserObject.TYPE);
+        FabricBlock block = fabricLandService.extBlock(id, FabricLandObject.TYPE);
         return ResponseEntity.ok(block);
     }
 
@@ -106,24 +117,24 @@ public class UserController {
      * List response entity.
      *
      * @param id       the id
-     * @param age      the age
-     * @param name     the name
+     * @param area      the area
+     * @param month     the month
      * @param pageSize the page size
      * @param bookmark the bookmark
      * @return the response entity
      * @author XieXiongXiong
      * @date 2021 -07-07 11:38:22
      */
-    @GetMapping("user")
-    public ResponseEntity<?> list(@RequestParam(required = false) String id,@RequestParam(required = false)Integer age,@RequestParam(required = false)String name,Integer pageSize ,@RequestParam(required = false,defaultValue = "")String bookmark){
-        FabricPaginationQuery<FabricUserObject> query = new FabricPaginationQuery<>();
-        query.setType(FabricUserObject.TYPE);
+    @GetMapping("landMonthStatistics")
+    public ResponseEntity<?> list(@RequestParam(required = false) String id,@RequestParam(required = false)String month,@RequestParam(required = false)String area,Integer pageSize ,@RequestParam(required = false,defaultValue = "")String bookmark){
+        FabricPaginationQuery<FabricLandObject> query = new FabricPaginationQuery<>();
+        query.setType(FabricLandObject.TYPE);
         query.setPageSize(pageSize);
         query.setBookmark(bookmark);
-        query.equals("key", id).equals("age", age).like("name", name);
-        FabricPagination<FabricUserObject> pagination = fabricUserService.pagination(query);
+        query.equals("id", id).equals("month", month).like("area", area);
+        FabricPagination<FabricLandObject> pagination = fabricLandService.pagination(query);
         query.setBookmark(pagination.getBookmark());
-        FabricPagination<FabricUserObject> next = fabricUserService.pagination(query);
+        FabricPagination<FabricLandObject> next = fabricLandService.pagination(query);
         if (CollectionUtils.isEmpty(next.getData())){
             pagination.setBookmark(null);
         }
@@ -134,17 +145,17 @@ public class UserController {
      * Size response entity.
      *
      * @param id   the id
-     * @param age  the age
-     * @param name the name
+     * @param area  the area
+     * @param month the month
      * @return the response entity
      * @author XieXiongXiong
      * @date 2021 -07-07 11:38:22
      */
-    @GetMapping("user/size")
-    public ResponseEntity<?> size(@RequestParam(required = false) String id,@RequestParam(required = false)Integer age,@RequestParam(required = false)String name){
+    @GetMapping("landMonthStatistics/size")
+    public ResponseEntity<?> size(@RequestParam(required = false) String id,@RequestParam(required = false)String month,@RequestParam(required = false)String area){
         FabricQuery query = new FabricQuery();
-        query.equals("key", id).equals("age", age).like("name", name);
-        FabricQueryResponse<Number> response = fabricUserService.count(query);
+        query.equals("id", id).equals("month", month).like("area", area);
+        FabricQueryResponse<Number> response = fabricLandService.count(query);
         return ResponseEntity.ok(response);
     }
 }
