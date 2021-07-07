@@ -54,20 +54,7 @@ public class FabricWrapper {
 				value = "";
 			}
 		} else {
-			if (object instanceof String){
-				value = object.toString();
-			}else {
-				try {
-					Method method = object.getClass().getDeclaredMethod("getValues", null);
-					Map data = (Map)method.invoke(object, null);
-					Map clone = (Map)method.invoke(object, null);
-					data.put("values",clone);
-					data.put("type",type);
-					data.put("key",key);
-					value = converter.toString(data);
-				} catch (Exception e) {
-				}
-			}
+			value = converter.toString(object);
 		}
 	}
 

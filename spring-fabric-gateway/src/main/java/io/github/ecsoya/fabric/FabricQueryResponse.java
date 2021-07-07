@@ -175,9 +175,7 @@ public class FabricQueryResponse<T> extends FabricResponse {
 						JsonObject object = child.getAsJsonObject();
 						String value = object.get("value").getAsString();
 						JsonElement jsonElement = parser.parse(value);
-						JsonObject jsonObject = jsonElement.getAsJsonObject();
-						JsonElement values = jsonObject.get("values");
-						object.add("value",values);
+						object.add("value",jsonElement);
 					}
 					T value = FabricUtil.build(FabricGson.stringify(child), type);
 					results.add(value);
