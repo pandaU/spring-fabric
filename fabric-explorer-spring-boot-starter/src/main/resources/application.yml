@@ -20,3 +20,5 @@ spring:
     network:
       file: peerConfig\connection-org1.yaml
       name: fabric network name
+    explorer:
+      path: manager
