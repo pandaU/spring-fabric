@@ -40,7 +40,7 @@ import static org.hyperledger.fabric.sdk.Channel.PeerOptions.createPeerOptions;
  * @date 2021 -07-09
  */
 public class CreateChannelAndSetAc {
-    public static final String HTTP_CONFIGTXLATOR = "192.168.17.132:7059";
+    public static final String HTTP_CONFIGTXLATOR = "http://192.168.17.132:7059";
     // Batch time out in configtx.yaml
     private static final String ORIGINAL_BATCH_TIMEOUT = "\"timeout\": \"2s\"";
     // What we want to change it to.
@@ -115,50 +115,13 @@ public class CreateChannelAndSetAc {
         return newChannel;
     }
 
-    public  void setAnc(HFClient client, Collection<Peer> peers , Collection<Orderer> orderers) throws Exception {
+    public  void setAnc(HFClient client,String channelName, Collection<Peer> peers , Collection<Orderer> orderers) throws Exception {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        Channel channel = reconstructChannel(false, "baseChannel", client, peers, orderers);
+        Channel channel = reconstructChannel(false, channelName, client, peers, orderers);
+
         byte[] channelConfigurationBytes = channel.getChannelConfigurationBytes();
 
         String originalConfigJson = configTxlatorDecode(httpClient, channelConfigurationBytes);
-        if (originalConfigJson.matches(REGX_IS_SYSTEM_CHANNEL)){
-             throw new RuntimeException();
-        }
-        if (!originalConfigJson.contains(ORIGINAL_BATCH_TIMEOUT)) {
-
-           throw  new RuntimeException(format("Did not find expected batch timeout '%s', in:%s", ORIGINAL_BATCH_TIMEOUT, originalConfigJson));
-        }
-
-        byte[] reEncodedOriginalConfig = configTxLatorEncode(httpClient, originalConfigJson); // we need to get this to make sure the compare has encoding in the same way!
-
-        //Now modify the batch timeout
-        String updateString = originalConfigJson.replace(ORIGINAL_BATCH_TIMEOUT, UPDATED_BATCH_TIMEOUT);
-
-        byte[] updatedConfigBytes = configTxLatorEncode(httpClient, updateString);
-
-        byte[] updateBytes = getChannelUpdateBytes(channel, reEncodedOriginalConfig, updatedConfigBytes);
-
-        UpdateChannelConfiguration updateChannelConfiguration = new UpdateChannelConfiguration(updateBytes);
-        User ordererAdmin = EnrollorderAdmin.getOrdererAdmin();
-        channel.updateChannelConfiguration(updateChannelConfiguration, client.getUpdateChannelConfigurationSignature(updateChannelConfiguration, ordererAdmin));
-        // give time for events to happen
-        Thread.sleep(3000);
-
-        final byte[] modChannelBytes = channel.getChannelConfigurationBytes();
-
-        originalConfigJson = configTxlatorDecode(httpClient, modChannelBytes);
-
-        if (!originalConfigJson.contains(UPDATED_BATCH_TIMEOUT)) {
-            //If it doesn't have the updated time out it failed.
-            throw new RuntimeException(format("Did not find updated expected batch timeout '%s', in:%s", UPDATED_BATCH_TIMEOUT, originalConfigJson));
-        }
-
-        if (originalConfigJson.contains(ORIGINAL_BATCH_TIMEOUT)) {
-            throw new RuntimeException(format("Found original batch timeout '%s', when it was not expected in:%s", ORIGINAL_BATCH_TIMEOUT, originalConfigJson));
-        }
-        if (eventCountFilteredBlock <= 0 || eventCountBlock <= 0){
-           throw new RuntimeException();
-        }
 
         // Get config update for adding an anchor peer.
         Channel.AnchorPeersConfigUpdateResult configUpdateAnchorPeers = channel.getConfigUpdateAnchorPeers(channel.getPeers().iterator().next(), client.getUserContext(),
@@ -174,13 +137,9 @@ public class CreateChannelAndSetAc {
         channelConfigurationBytes = channel.getChannelConfigurationBytes();
         originalConfigJson = configTxlatorDecode(httpClient, channelConfigurationBytes);
 
-        //Should see what's there.
-        configUpdateAnchorPeers = channel.getConfigUpdateAnchorPeers(channel.getPeers().iterator().next(),  client.getUserContext(),
-                null, null);
-
         //Now remove the anchor peer -- get the config update block.
         configUpdateAnchorPeers = channel.getConfigUpdateAnchorPeers(channel.getPeers().iterator().next(), client.getUserContext(),
-                null, Arrays.asList(PEER_0_ORG_1_EXAMPLE_COM_7051));
+                null, Arrays.asList("peer0.org1.xxzx.com:8051"));
 
 
         // Now do the actual update.
@@ -218,7 +177,7 @@ public class CreateChannelAndSetAc {
 
         orderers.forEach(orderer -> {
             try {
-                newChannel.addOrderer(orderer);
+                newChannel.addOrderer(client.newOrderer(orderer.getName(),orderer.getUrl(),orderer.getProperties()));
             } catch (InvalidArgumentException e) {
                 e.printStackTrace();
             }
@@ -243,55 +202,9 @@ public class CreateChannelAndSetAc {
                 peerOptions.registerEventsForBlocks();
             }
             ++i;
-
+            peer =client.newPeer(peer.getName(),peer.getUrl(),peer.getProperties());
             newChannel.addPeer(peer, peerOptions);
         }
-
-        //For testing of blocks which are not transactions.
-        newChannel.registerBlockListener(blockEvent -> {
-            eventQueueCaputure.add(blockEvent);
-            int transactions = 0;
-            int nonTransactions = 0;
-            for (BlockInfo.EnvelopeInfo envelopeInfo : blockEvent.getEnvelopeInfos()) {
-
-                if (BlockInfo.EnvelopeType.TRANSACTION_ENVELOPE == envelopeInfo.getType()) {
-                    ++transactions;
-                } else {
-                    ++nonTransactions;
-                }
-
-            }
-            if (nonTransactions < 2){
-                System.out.println(format("nontransactions %d, transactions %d", nonTransactions, transactions));
-            }else {
-                throw  new RuntimeException("non transaction blocks only have one envelope");
-            }
-            if (nonTransactions + transactions > 0){
-                System.out.println(format("nontransactions %d, transactions %d", nonTransactions, transactions));
-            }else {
-                throw  new RuntimeException("has to be one");
-            }
-            if (!(nonTransactions > 0 && transactions > 0)){
-                System.out.println(format("nontransactions %d, transactions %d", nonTransactions, transactions));
-            }else {
-                throw  new RuntimeException("can't have both");
-            }
-            if (nonTransactions > 0) { // this is an update block -- don't care about others here.
-
-                if (blockEvent.isFiltered()) {
-                    ++eventCountFilteredBlock; // make sure we're seeing non transaction events.
-                } else {
-                    ++eventCountBlock;
-                }
-                blockEvent.getTransactionEvents().forEach(x->{
-                    throw  new RuntimeException("only events for update should not have transactions");
-                });
-            }
-        });
-        listenerHandler1 = newChannel.registerBlockListener(blockingQueue1);
-
-        listenerHandler2 = newChannel.registerBlockListener(blockingQueue2, 1L, TimeUnit.SECONDS);
-
         newChannel.initialize();
 
         return newChannel;
