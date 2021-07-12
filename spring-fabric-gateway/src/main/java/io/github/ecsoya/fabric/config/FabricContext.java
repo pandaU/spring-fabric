@@ -84,6 +84,11 @@ public class FabricContext {
 	 * Contract
 	 */
 	private FabricContract contract;
+    
+	/**
+	 * Wallet
+	 */
+	private Wallet wallet;
 
 	/**
 	 * Fabric context
@@ -221,7 +226,7 @@ public class FabricContext {
 			throw new FabricException("Initialize Wallet failed, there's no identity = '" + identityName
 					+ "' exists in wallet directory: " + walletProps.getFile());
 		}
-
+        this.wallet = wallet;
 		logger.debug("Initialize Gateway... ");
 		configFile = properties.getNetworkContents();
 		try {
@@ -240,7 +245,6 @@ public class FabricContext {
 		logger.debug("Initialize Network... ");
 
 		network = gateway.getNetwork(channel);
-
 	}
 
 	/**
@@ -753,5 +757,9 @@ public class FabricContext {
 		} catch (Exception e) {
 			return FabricQueryResponse.failure(e.getLocalizedMessage());
 		}
+	}
+
+	public  Wallet getWallet(){
+         return this.wallet;
 	}
 }

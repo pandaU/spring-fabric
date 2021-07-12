@@ -53,6 +53,9 @@ public class FabricProperties {
      */
     private FabricChaincodeProperties chaincode = new FabricChaincodeProperties();
 
+
+	private ChannelConfigTxGenProperties channelConfig = new ChannelConfigTxGenProperties();
+
     /**
      * Gets network contents.
      *
