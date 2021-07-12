@@ -11,29 +11,29 @@ organizations:
   Org1:
     mspid: Org1MSP
     peers:
-    - peer0.org1.xxzx.com
+      - peer0.org1.xxzx.com
     certificateAuthorities:
-    - ca.org1.xxzx.com
+      - ca.org1.xxzx.com
 peers:
   peer0.org1.xxzx.com:
-    url: grpcs://peer0.org1.xxzx.com:7051
+    url: grpcs://peer0.org1.xxzx.com:8051
     tlsCACerts:
       pem: |
-          -----BEGIN CERTIFICATE-----
-          MIICGjCCAcGgAwIBAgIUTNgLlV7ELOA8DhAt6Dx8bl+uvsMwCgYIKoZIzj0EAwIw
-          ajELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMQ8wDQYDVQQH
-          EwZEdXJoYW0xFjAUBgNVBAoTDW9yZzEueHh6eC5jb20xGTAXBgNVBAMTEGNhLm9y
-          ZzEueHh6eC5jb20wHhcNMjEwNzA2MTEwNzAwWhcNMzYwNzAyMTEwNzAwWjBqMQsw
-          CQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xpbmExDzANBgNVBAcTBkR1
-          cmhhbTEWMBQGA1UEChMNb3JnMS54eHp4LmNvbTEZMBcGA1UEAxMQY2Eub3JnMS54
-          eHp4LmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABP0D0Z7F/eZBsm/QF5FL
-          cNiP2AVAxRXtwKsndQYVeL/cZ0c8/W183Je1ODAFs/fbAsc4Cmsk1aaa7jphzW0o
-          r0OjRTBDMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEBMB0GA1Ud
-          DgQWBBTAAiTisGf+X+6qmjjE/RS3nPQJkjAKBggqhkjOPQQDAgNHADBEAiALDOqk
-          /uZZ4zbKp7SEjvuU+Y7/GnD0+bvwE7XxVhI6twIgNAfCpnOpD7Yq1cUUCi+o3XjO
-          mvXpoHTWdBW2gty13SQ=
-          -----END CERTIFICATE-----
-          
+        -----BEGIN CERTIFICATE-----
+        MIICGzCCAcGgAwIBAgIUELO6uE4yXGZC9cE1bmW8rTNagBYwCgYIKoZIzj0EAwIw
+        ajELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMQ8wDQYDVQQH
+        EwZEdXJoYW0xFjAUBgNVBAoTDW9yZzEueHh6eC5jb20xGTAXBgNVBAMTEGNhLm9y
+        ZzEueHh6eC5jb20wHhcNMjEwNzA4MDYxNDAwWhcNMzYwNzA0MDYxNDAwWjBqMQsw
+        CQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xpbmExDzANBgNVBAcTBkR1
+        cmhhbTEWMBQGA1UEChMNb3JnMS54eHp4LmNvbTEZMBcGA1UEAxMQY2Eub3JnMS54
+        eHp4LmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABN2LDpQv+MY/W8BQJ0DE
+        jiaX0MU+a1+y6lbMk2y7x6Vq92EpOI05oPAUY2IQQHjZIALSEBEr3AzoqF5C2od0
+        +hijRTBDMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEBMB0GA1Ud
+        DgQWBBQ3GGOU7n/IjMFgJHWgYuz0f9DlMTAKBggqhkjOPQQDAgNIADBFAiEAqxyQ
+        CKuqvHpRyU4wR43Asj/12QxSAb/VQtUByvXEYzQCIH1e6Hxb3M3lEEEReqJBqOta
+        W2NqtjjayIaATNaXniWN
+        -----END CERTIFICATE-----
+
     grpcOptions:
       ssl-target-name-override: peer0.org1.xxzx.com
       hostnameOverride: peer0.org1.xxzx.com
@@ -42,22 +42,22 @@ certificateAuthorities:
     url: https://ca.org1.xxzx.com:7054
     caName: ca-org1
     tlsCACerts:
-      pem: 
+      pem:
         - |
           -----BEGIN CERTIFICATE-----
-          MIICGjCCAcGgAwIBAgIUTNgLlV7ELOA8DhAt6Dx8bl+uvsMwCgYIKoZIzj0EAwIw
+          MIICGzCCAcGgAwIBAgIUELO6uE4yXGZC9cE1bmW8rTNagBYwCgYIKoZIzj0EAwIw
           ajELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMQ8wDQYDVQQH
           EwZEdXJoYW0xFjAUBgNVBAoTDW9yZzEueHh6eC5jb20xGTAXBgNVBAMTEGNhLm9y
-          ZzEueHh6eC5jb20wHhcNMjEwNzA2MTEwNzAwWhcNMzYwNzAyMTEwNzAwWjBqMQsw
+          ZzEueHh6eC5jb20wHhcNMjEwNzA4MDYxNDAwWhcNMzYwNzA0MDYxNDAwWjBqMQsw
           CQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xpbmExDzANBgNVBAcTBkR1
           cmhhbTEWMBQGA1UEChMNb3JnMS54eHp4LmNvbTEZMBcGA1UEAxMQY2Eub3JnMS54
-          eHp4LmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABP0D0Z7F/eZBsm/QF5FL
-          cNiP2AVAxRXtwKsndQYVeL/cZ0c8/W183Je1ODAFs/fbAsc4Cmsk1aaa7jphzW0o
-          r0OjRTBDMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEBMB0GA1Ud
-          DgQWBBTAAiTisGf+X+6qmjjE/RS3nPQJkjAKBggqhkjOPQQDAgNHADBEAiALDOqk
-          /uZZ4zbKp7SEjvuU+Y7/GnD0+bvwE7XxVhI6twIgNAfCpnOpD7Yq1cUUCi+o3XjO
-          mvXpoHTWdBW2gty13SQ=
+          eHp4LmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABN2LDpQv+MY/W8BQJ0DE
+          jiaX0MU+a1+y6lbMk2y7x6Vq92EpOI05oPAUY2IQQHjZIALSEBEr3AzoqF5C2od0
+          +hijRTBDMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEBMB0GA1Ud
+          DgQWBBQ3GGOU7n/IjMFgJHWgYuz0f9DlMTAKBggqhkjOPQQDAgNIADBFAiEAqxyQ
+          CKuqvHpRyU4wR43Asj/12QxSAb/VQtUByvXEYzQCIH1e6Hxb3M3lEEEReqJBqOta
+          W2NqtjjayIaATNaXniWN
           -----END CERTIFICATE-----
-          
+
     httpOptions:
       verify: false

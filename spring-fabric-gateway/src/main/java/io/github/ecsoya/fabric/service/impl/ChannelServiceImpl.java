@@ -1,7 +1,6 @@
 package io.github.ecsoya.fabric.service.impl;
 
 import io.github.ecsoya.fabric.config.ChannelConfigTxGenProperties;
-import io.github.ecsoya.fabric.config.FabricContext;
 import io.github.ecsoya.fabric.service.ChannelService;
 import io.github.ecsoya.fabric.utils.FileUtils;
 import io.github.ecsoya.fabric.utils.HfClientUtil;
@@ -40,26 +39,21 @@ import static org.hyperledger.fabric.sdk.Channel.PeerOptions.createPeerOptions;
 public class ChannelServiceImpl implements ChannelService {
     private final static Integer SUCCESS = 200;
 
-    private final static HFClient client = HfClientUtil.CLIENT;
-
-    private FabricContext fabricContext;
-
     private ChannelConfigTxGenProperties config;
 
-    public ChannelServiceImpl(FabricContext fabricContext) {
-        this.fabricContext = fabricContext;
-        this.config = fabricContext.getProperties().getChannelConfig();
+    public ChannelServiceImpl(ChannelConfigTxGenProperties config) {
+        this.config = config;
     }
 
     @Override
     public Channel createChannel(String channelName) throws IOException, InvalidArgumentException, TransactionException {
         Collection<Orderer> orderers = HfClientUtil.getOrderers();
-        Orderer orderer = client.newOrderer(orderers.iterator().next().getName(), orderers.iterator().next().getUrl(), orderers.iterator().next().getProperties());
+        Orderer orderer = HfClientUtil.CLIENT.newOrderer(orderers.iterator().next().getName(), orderers.iterator().next().getUrl(), orderers.iterator().next().getProperties());
         String txPath = Thread.currentThread().getContextClassLoader().getResource(getTxPath(channelName)).getPath().substring(1);
         ChannelConfiguration configuration = new ChannelConfiguration(new File(txPath));
         //3. 获取签名
-        byte[] signData = client.getChannelConfigurationSignature(configuration, client.getUserContext());
-        Channel channel = client.newChannel(channelName, orderer, configuration, signData);
+        byte[] signData = HfClientUtil.CLIENT.getChannelConfigurationSignature(configuration, HfClientUtil.CLIENT.getUserContext());
+        Channel channel = HfClientUtil.CLIENT.newChannel(channelName, orderer, configuration, signData);
         Collection<Peer> peers = HfClientUtil.getPeers();
         Channel newChannel = channel.initialize();
         newChannel.serializeChannel(new File(config.getBlockPrefix() + channelName + config.getBlocksuffix()));
@@ -67,7 +61,7 @@ public class ChannelServiceImpl implements ChannelService {
         FileUtils.writeFile(channel64String, config.getBase64Prefix() + channelName + config.getBase64Suffix(), false);
         peers.forEach(peer -> {
             try {
-                Peer newPeer = client.newPeer(peer.getName(), peer.getUrl(), peer.getProperties());
+                Peer newPeer = HfClientUtil.CLIENT.newPeer(peer.getName(), peer.getUrl(), peer.getProperties());
                 newChannel.joinPeer(newPeer);
             } catch (Exception e) {
                 log.error("peer：{} 加入通道失败", peer.getName(), e);
@@ -81,21 +75,21 @@ public class ChannelServiceImpl implements ChannelService {
         Channel channel = reconstructChannel(false, channelName, peers, orderers);
 
         // Get config update for adding an anchor peer.
-        Channel.AnchorPeersConfigUpdateResult configUpdateAnchorPeers = channel.getConfigUpdateAnchorPeers(channel.getPeers().iterator().next(), client.getUserContext(),
+        Channel.AnchorPeersConfigUpdateResult configUpdateAnchorPeers = channel.getConfigUpdateAnchorPeers(channel.getPeers().iterator().next(), HfClientUtil.CLIENT.getUserContext(),
                 Arrays.asList(addAnchor), null);
 
         if (configUpdateAnchorPeers.getUpdateChannelConfiguration() != null){
             channel.updateChannelConfiguration(configUpdateAnchorPeers.getUpdateChannelConfiguration(),
-                    client.getUpdateChannelConfigurationSignature(configUpdateAnchorPeers.getUpdateChannelConfiguration(), client.getUserContext()));
+                    HfClientUtil.CLIENT.getUpdateChannelConfigurationSignature(configUpdateAnchorPeers.getUpdateChannelConfiguration(), HfClientUtil.CLIENT.getUserContext()));
         }
 
         if (removeAnchor != null && !removeAnchor.isEmpty()){
-            configUpdateAnchorPeers = channel.getConfigUpdateAnchorPeers(channel.getPeers().iterator().next(), client.getUserContext(),
+            configUpdateAnchorPeers = channel.getConfigUpdateAnchorPeers(channel.getPeers().iterator().next(), HfClientUtil.CLIENT.getUserContext(),
                     null, Arrays.asList(removeAnchor));
 
             if (configUpdateAnchorPeers.getUpdateChannelConfiguration() != null){
                 channel.updateChannelConfiguration(configUpdateAnchorPeers.getUpdateChannelConfiguration(),
-                        client.getUpdateChannelConfigurationSignature(configUpdateAnchorPeers.getUpdateChannelConfiguration(), client.getUserContext()));
+                        HfClientUtil.CLIENT.getUpdateChannelConfigurationSignature(configUpdateAnchorPeers.getUpdateChannelConfiguration(), HfClientUtil.CLIENT.getUserContext()));
             }
         }
         return channel;
@@ -126,11 +120,11 @@ public class ChannelServiceImpl implements ChannelService {
 
     private Channel reconstructChannel(final boolean isSystemChannel, String name, Collection<Peer> peers , Collection<Orderer> orderers) throws Exception {
 
-        Channel newChannel = client.newChannel(name);
+        Channel newChannel = HfClientUtil.CLIENT.newChannel(name);
 
         orderers.forEach(orderer -> {
             try {
-                newChannel.addOrderer(client.newOrderer(orderer.getName(),orderer.getUrl(),orderer.getProperties()));
+                newChannel.addOrderer(HfClientUtil.CLIENT.newOrderer(orderer.getName(),orderer.getUrl(),orderer.getProperties()));
             } catch (InvalidArgumentException e) {
                log.error("校验orderer节点信息失败");
             }
@@ -141,14 +135,14 @@ public class ChannelServiceImpl implements ChannelService {
             return newChannel;
         }
         for (Peer peer: peers) {
-            Set<String> channels = client.queryChannels(peer);
+            Set<String> channels = HfClientUtil.CLIENT.queryChannels(peer);
             if (!channels.contains(name)) {
                 throw new AssertionError(format("Peer %s does not appear to belong to channel %s", peer.getName(), name));
             }
             Channel.PeerOptions peerOptions = createPeerOptions().setPeerRoles(EnumSet.of(Peer.PeerRole.CHAINCODE_QUERY,
                     Peer.PeerRole.ENDORSING_PEER, Peer.PeerRole.LEDGER_QUERY, Peer.PeerRole.EVENT_SOURCE));
 
-            peer =client.newPeer(peer.getName(),peer.getUrl(),peer.getProperties());
+            peer =HfClientUtil.CLIENT.newPeer(peer.getName(),peer.getUrl(),peer.getProperties());
             newChannel.addPeer(peer, peerOptions);
         }
         Channel channel = newChannel.initialize();

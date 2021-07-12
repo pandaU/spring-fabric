@@ -762,4 +762,8 @@ public class FabricContext {
 	public  Wallet getWallet(){
          return this.wallet;
 	}
+
+	public Network getNetwork() {
+		return network;
+	}
 }

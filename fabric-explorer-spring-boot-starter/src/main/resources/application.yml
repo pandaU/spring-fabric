@@ -14,7 +14,7 @@ spring:
         caFile: peerConfig/ca.org1.xxzx.com-cert.pem
         cahost: ca.org1.xxzx.com
         caMsp: Org1MSP
-        identify: org1admin
+        identity: org1admin
         identityPw: org1adminpw
         file: C:\Users\MSI\Desktop\spring-fabric-gateway-master\fabric-explorer-spring-boot-starter\wallet
         memory: true
@@ -23,3 +23,5 @@ spring:
       name: fabric network name
     explorer:
       path: manager
+    channelConfig:
+      httpConfigTxLator: http://192.168.17.132:7059
