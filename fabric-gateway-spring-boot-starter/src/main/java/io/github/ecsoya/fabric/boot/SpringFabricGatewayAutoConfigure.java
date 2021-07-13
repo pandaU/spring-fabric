@@ -1,5 +1,10 @@
 package io.github.ecsoya.fabric.boot;
 
+import io.github.ecsoya.fabric.service.ChainCodeService;
+import io.github.ecsoya.fabric.service.ChannelService;
+import io.github.ecsoya.fabric.service.impl.ChainCodeServiceImpl;
+import io.github.ecsoya.fabric.service.impl.ChannelServiceImpl;
+import io.github.ecsoya.fabric.utils.HfClientUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +79,44 @@ public class SpringFabricGatewayAutoConfigure {
 	@Bean
 	public IFabricInfoService fabricInfoService(FabricContext fabricContext) {
 		return new FabricInfoServiceImpl(fabricContext);
+	}
+
+	/**
+	 * Chain code service chain code service.
+	 *
+	 * @param fabricContext the fabric context
+	 * @return the chain code service
+	 * @author XieXiongXiong
+	 * @date 2021 -07-13 14:35:03
+	 */
+	@Bean
+	public ChainCodeService chainCodeService(FabricContext fabricContext) {
+		return new ChainCodeServiceImpl(fabricContext);
+	}
+
+	/**
+	 * Hf client util hf client util.
+	 *
+	 * @param fabricContext the fabric context
+	 * @return the hf client util
+	 * @author XieXiongXiong
+	 * @date 2021 -07-13 14:49:35
+	 */
+	@Bean
+	public HfClientUtil hfClientUtil(FabricContext fabricContext){
+		return new HfClientUtil(fabricContext);
+	}
+
+	/**
+	 * Channel service channel service.
+	 *
+	 * @param fabricContext the fabric context
+	 * @return the channel service
+	 * @author XieXiongXiong
+	 * @date 2021 -07-13 14:49:35
+	 */
+	@Bean
+	public ChannelService channelService(FabricContext fabricContext){
+		return new ChannelServiceImpl(fabricContext.getProperties().getChannelConfig());
 	}
 }

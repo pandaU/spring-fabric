@@ -1,16 +1,24 @@
 package io.github.ecsoya.fabric.explorer.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import ch.qos.logback.core.util.FileUtil;
+import com.google.gson.Gson;
+import io.github.ecsoya.fabric.FabricResponse;
+import io.github.ecsoya.fabric.service.ChainCodeService;
+import lombok.extern.slf4j.Slf4j;
+import org.hyperledger.fabric.sdk.TransactionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import io.github.ecsoya.fabric.FabricPagination;
@@ -22,6 +30,7 @@ import io.github.ecsoya.fabric.bean.FabricLedger;
 import io.github.ecsoya.fabric.bean.FabricTransaction;
 import io.github.ecsoya.fabric.explorer.FabricExplorerProperties;
 import io.github.ecsoya.fabric.service.IFabricInfoService;
+import io.github.ecsoya.fabric.utils.FileUtils;
 
 /**
  * <p>
@@ -30,6 +39,7 @@ import io.github.ecsoya.fabric.service.IFabricInfoService;
  * @author XieXiongXiong
  * @date 2021 -07-07
  */
+@Slf4j
 public class FabricExplorerController {
 
 	/**
@@ -43,6 +53,9 @@ public class FabricExplorerController {
 	 */
 	@Autowired
 	private FabricExplorerProperties properties;
+
+	@Autowired
+	private ChainCodeService chainCodeService;
 
 	/**
 	 * Base url string.
@@ -228,5 +241,49 @@ public class FabricExplorerController {
 	@ResponseBody
 	public FabricQueryResponse<List<FabricHistory>> queryHistories(String type, String key) {
 		return fabricService.queryHistory(type, key);
+	}
+
+	@PostMapping("/chainCode/deploy")
+	@ResponseBody
+	public  FabricResponse deployCC(@RequestParam("file") MultipartFile file, String name, String version, String language) {
+		if(file.isEmpty()){
+			return FabricResponse.fail("请选择文件");
+		}
+		String fileName = file.getOriginalFilename();
+//		int size = (int) file.getSize();
+//		System.out.println(fileName + "-->" + size);
+		String realPath = null;
+		try {
+			String path = ResourceUtils.getURL("classpath:").getPath()+"static/tmp";
+			realPath = path.replace('/', '\\').substring(1,path.length()) + "/" + UUID.randomUUID().toString().replace("-","");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		File dest = new File(realPath + "/" + fileName);
+		if(!dest.getParentFile().exists()){
+			dest.getParentFile().mkdir();
+		}
+		try {
+			file.transferTo(dest);
+			String savePath = FileUtils.unZip(dest.getAbsolutePath());
+            chainCodeService.deployChainCode(name,version,null,savePath,null);
+			return FabricResponse.ok();
+		} catch (Exception e) {
+			log.error("部署合约失败",e);
+		}finally {
+			try {
+				org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory(new File(realPath));
+			} catch (IOException e) {
+			}
+		}
+		return FabricResponse.fail("新增智能合约失败");
+	}
+
+	private  static byte[] generatePackageMataDataBytes(String label, String path, TransactionRequest.Type type) {
+		if (path == null) {
+			path = "";
+		}
+
+		return String.format("{\"path\":%s,\"type\":\"%s\",\"label\":%s}", (new Gson()).toJson(path), type.toPackageName(), (new Gson()).toJson(label)).getBytes(StandardCharsets.UTF_8);
 	}
 }

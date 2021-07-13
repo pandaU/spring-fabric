@@ -160,3 +160,66 @@ function performSearch() {
 		window.location.href = basePath + 'block?height=' + query;
 	}
 }
+
+$('#uploadModal').on('hidden.bs.modal', function (e) {
+	$("#name").val("");
+	$("#version").val("");
+	$("#file").val("");
+})
+function validFile() {
+	var file = $("#file")[0].files[0]
+	var fileSize = file.size/(1024*1024);
+	var filePath = $("#file").val();
+	if(fileSize>30){
+		swal("错误", "上传单个文件大小不能超过30MB!", "warning");
+		return false;
+	}
+	var fix = filePath.substr(filePath.lastIndexOf('.'));
+	var lowFix = fix.toLowerCase();
+	if (lowFix !== '.zip'){
+		swal("错误", "文件格式不合法,请选择zip", "warning");
+	}
+
+}
+(function() {
+	'use strict';
+	window.addEventListener('load', function() {
+		// Fetch all the forms we want to apply custom Bootstrap validation styles to
+		var forms = document.getElementsByClassName('needs-validation');
+		// Loop over them and prevent submission
+		var validation = Array.prototype.filter.call(forms, function(form) {
+			form.addEventListener('submit', function(event) {
+				if (form.checkValidity() === false) {
+					event.preventDefault();
+					event.stopPropagation();
+				}
+				if (form.checkValidity()){
+					event.preventDefault();
+					event.stopPropagation();
+					var formData = new FormData();
+					formData.append("file",$("#file").get(0).files[0]);
+					formData.append("name", $("#name").val());
+					formData.append("version", $("#version").val());
+					formData.append("language", $("#language").val());
+					$.ajax({
+						url: 'manager/chainCode/deploy',
+						dataType: "json",
+						type: "post",
+						data: formData,
+						processData: false,
+						contentType: false,
+						error: function (res) {
+							swal("错误", res.errorMsg, "error");
+						},
+						success: function (res) {
+							swal("新增成功","智能合约部署成功", "success");
+							$('#uploadModal').modal('hide')
+						}
+					})
+				}
+				form.classList.add('was-validated');
+			}, false);
+		});
+	}, false);
+})();
+

@@ -1,3 +1,4 @@
+
 spring:
   fabric:
     chaincode:
@@ -25,3 +26,11 @@ spring:
       path: manager
     channelConfig:
       httpConfigTxLator: http://192.168.17.132:7059
+  servlet:
+    multipart:
+      max-request-size: 30MB
+      max-file-size: 30MB
+server:
+  connection-timeout: 180000
+  tomcat:
+    max-connections: 100000

@@ -3,6 +3,7 @@ package io.github.ecsoya.fabric.service.impl;
 import io.github.ecsoya.fabric.config.FabricContext;
 import io.github.ecsoya.fabric.service.ChainCodeService;
 import io.github.ecsoya.fabric.utils.HfClientUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.hyperledger.fabric.gateway.Network;
 import org.hyperledger.fabric.sdk.*;
 import org.hyperledger.fabric.sdk.exception.ChaincodeEndorsementPolicyParseException;
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeoutException;
  * @author XieXiongXiong
  * @date 2021 -07-12
  */
+@Slf4j
 public class ChainCodeServiceImpl implements ChainCodeService {
 
     private Network network;
@@ -44,8 +46,8 @@ public class ChainCodeServiceImpl implements ChainCodeService {
             seq = 1L;
         }
         LifecycleInstallChaincodeRequest request = HfClientUtil.CLIENT.newLifecycleInstallChaincodeRequest();
-        LifecycleChaincodePackage test = LifecycleChaincodePackage.fromSource(chainCodeName, Paths.get(path), TransactionRequest.Type.JAVA, null, null);
-        request.setLifecycleChaincodePackage(test);
+        LifecycleChaincodePackage codePackage = LifecycleChaincodePackage.fromSource(chainCodeName, Paths.get(path), TransactionRequest.Type.JAVA, null, null);
+        request.setLifecycleChaincodePackage(codePackage);
         Collection<Peer> peers = channel.getPeers();
         Collection<LifecycleInstallChaincodeProposalResponse> responses = HfClientUtil.CLIENT.sendLifecycleInstallChaincodeRequest(request,peers);
         String packageId =null;
@@ -64,7 +66,7 @@ public class ChainCodeServiceImpl implements ChainCodeService {
         //确认approve
         CompletableFuture<BlockEvent.TransactionEvent> future = channel.sendTransaction(myOrgProposalResponses);
         //5秒ttl得到异步返回值
-        future.get(5, TimeUnit.SECONDS);
+        future.get(10, TimeUnit.SECONDS);
         LifecycleCheckCommitReadinessRequest commitReadinessRequest = HfClientUtil.CLIENT.newLifecycleSimulateCommitChaincodeDefinitionRequest();
         commitReadinessRequest.setChaincodeName(chainCodeName);
         commitReadinessRequest.setChaincodeVersion(version);
@@ -76,7 +78,7 @@ public class ChainCodeServiceImpl implements ChainCodeService {
         proposalResponses.forEach(x->{
             try {
                 Map<String, Boolean> map = x.getApprovalsMap();
-                System.out.println(map);
+                log.info("组织审批意见{}",map);
             } catch (ProposalException e) {
                 e.printStackTrace();
             }
