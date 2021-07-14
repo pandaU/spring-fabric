@@ -41,7 +41,7 @@
                             onclick="performSearch()" th:text="#{index.search}"></button>
                 </form>
                 <button type="button" class="btn btn-outline-success my-2 my-sm-0"
-                        data-toggle="modal" data-target="#uploadModal">新增合约
+                        data-toggle="modal" data-target="#uploadModal" th:text="#{chainCode.add}">
                 </button>
                 <a th:href="${hyperledgerExplorerUrl}"><img
                         th:src="${baseURL + '/img/explorer/hyperledger_explorer.svg'}" width="150" height="32"
