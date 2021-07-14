@@ -254,7 +254,7 @@ public class FabricExplorerController {
 //		System.out.println(fileName + "-->" + size);
 		String realPath = null;
 		try {
-			String path = ResourceUtils.getURL("classpath:").getPath()+"static/tmp";
+			String path = ResourceUtils.getURL("classpath:").getPath();
 			realPath = path.replace('/', '\\').substring(1,path.length()) + "/" + UUID.randomUUID().toString().replace("-","");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
