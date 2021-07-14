@@ -112,31 +112,9 @@ table td {
 							</div>
 							<div class="card mt-3">
 								<div class="card-header bg-fabric text-center text-white">
-									<label th:text="#{tx.reads}"></label>
+									<label >交易信息</label>
 								</div>
-								<table class="table table-styled" style="width: 100%"
-									id="readTable">
-									<thead>
-										<th width="5%">#</th>
-										<th width="30%">Key</th>
-										<th width="45%" th:text="hhhhhh"></th>
-										<th width="20%" th:text="#{tx.reads.others}"></th>
-									</thead>
-								</table>
-							</div>
-							<div class="card mt-3">
-								<div class="card-header bg-fabric text-center text-white">
-									<label th:text="#{tx.writes}"></label>
-								</div>
-								<table class="table table-styled " style="width: 100%"
-									id="writeTable">
-									<thead>
-										<th width="5%">#</th>
-										<th width="30%">Key</th>
-										<th width="45%" th:text="#{tx.writes.items}"></th>
-										<th width="20%" th:text="#{tx.writes.delete}"></th>
-									</thead>
-								</table>
+								<p id="tx-info"></p>
 							</div>
 
 							<div class="row mt-3 justify-content-center">

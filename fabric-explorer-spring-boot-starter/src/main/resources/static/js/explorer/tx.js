@@ -50,7 +50,8 @@ function queryRWSet() {
 			writeTable.draw();
 
 			$('[data-toggle="tooltip"]').tooltip()*/
-			$('#tx-info').text=res.data;
+			var tx = $('#tx-info');
+			tx.text(res.data);
 		}
 	}, function fail(data, status) {
 
