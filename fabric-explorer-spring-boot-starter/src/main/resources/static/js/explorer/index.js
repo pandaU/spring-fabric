@@ -162,9 +162,7 @@ function performSearch() {
 }
 
 $('#uploadModal').on('hidden.bs.modal', function (e) {
-	$("#name").val("");
-	$("#version").val("");
-	$("#file").val("");
+	clear();
 })
 function validFile() {
 	var file = $("#file")[0].files[0]
@@ -212,8 +210,13 @@ function validFile() {
 							swal("错误", res.errorMsg, "error");
 						},
 						success: function (res) {
-							swal("新增成功","智能合约部署成功", "success");
-							$('#uploadModal').modal('hide')
+							if (res.status === 1){
+								swal("新增成功","智能合约部署成功", "success");
+								$('#uploadModal').modal('hide');
+								clear();
+							}else {
+								swal("新增失败","智能合约部署失败", "error");
+							}
 						}
 					})
 				}
@@ -222,4 +225,14 @@ function validFile() {
 		});
 	}, false);
 })();
-
+function clear() {
+	$("#name").val("");
+	$("#version").val("");
+	$("#file").val("");
+}
+function turnChainCode() {
+	window.location.href = basePath + 'chainCode/index';
+}
+function index() {
+	window.location.href = basePath;
+}

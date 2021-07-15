@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title th:text="#{chainCode.manager}"></title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="shortcut icon" th:href="${baseURL + '/favicon.ico'}">
+    <link th:href="${baseURL + '/css/explorer/bootstrap.min.css'}" rel="stylesheet">
+    <link th:href="${baseURL + '/css/explorer/datatables.min.css'}" rel="stylesheet">
+    <link th:href="${baseURL + '/css/explorer/main.css'}" rel="stylesheet">
+</head>
+<body>
+<input type="hidden" id="baseURL" th:value="${baseURL}"/>
+<input type="hidden" id="codeName" th:value="${chainCodeName}"/>
+<input type="hidden" id="path" th:value="${path}"/>
+<input type="hidden" id="viewTitle" th:value="#{index.view.title}">
+<input type="hidden" id="loading" th:value="#{index.loading}">
+<div class="wrapper">
+    <header class="header-top">
+        <nav class="navbar navbar-light bg-light">
+            <div class="container">
+                <a th:href="${baseURL + '/' + path}"
+                   class="navbar-brand router-link-exact-active router-link-active"
+                   style="font-size: 32px; color: #606060"><img
+                        th:src="${baseURL + '/' + logo}" width="40" height="40"
+                        style="margin-right: 10px; margin-top: -6px;" alt=""
+                        class="d-inline-block"> <label th:text="${title}"></label> </a>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link"  href="#" onclick="index()">概述</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active"  href="#"  onclick="turnChainCode()">智能合约</a>
+                    </li>
+                </ul>
+                <a th:href="${hyperledgerExplorerUrl}"><img
+                        th:src="${baseURL + '/img/explorer/hyperledger_explorer.svg'}" width="150" height="32"
+                        th:alt="#{index.hyperledger.explorer.title}" data-toggle="tooltip"
+                        th:title="#{index.hyperledger.explorer.title}"></a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+            <nav class="breadcrumb-container"
+                 style="margin-top: 10px; margin-bottom: -30px;">
+                <ol class="breadcrumb bg-white">
+                    <li class="breadcrumb-item"><a th:href="${baseURL + '/' + path + '/'}"><img
+                            th:src="${baseURL + '/img/explorer/home.png'}" class="image" th:text="#{index.title}">
+                    </a></li>
+                    <li class="breadcrumb-item"><a th:href="${baseURL + '/' + path + '/chainCode/index'}">智能合约</a></li>
+                    <li class="breadcrumb-item active">历史版本详情</li>
+                </ol>
+            </nav>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div>
+                        <div class="card mt-3">
+                            <div class="card-header bg-fabric text-center text-white">
+                                <label>智能合约列表</label>
+                            </div>
+                            <table class="table table-styled"
+                                   style="width: 100%; margin-top: -15px; color: #606060"
+                                   id="dataTable">
+                                <thead>
+                                <th>名称</th>
+                                <th>版本</th>
+                                <th>序列号</th>
+                                <th>背书规则</th>
+                                <th>语言类型</th>
+                                <th>package-id</th>
+                                <th>部署时间</th>
+                                <th>状态</th>
+                                </thead>
+                            </table>
+                            <div class="card-body text-center"></div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3 justify-content-center">
+                        <button class="btn btn-primary" type="button" id="loadMoreButton"
+                                onclick="loadMore()" data-toggle="tooltip"
+                                th:title="#{index.loadmore.title}" th:text="#{index.loadmore}"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer bg-light">
+            <div class="container">
+                <div class="row justify-content-center">
+					<span class="copyright" style="color: #606060"><label
+                            th:text="#{copyright}"></label> <label th:text="${copyright}"></label>
+					</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript -->
+<script th:src="${baseURL + '/js/explorer/jquery.min.js'}"></script>
+<script th:src="${baseURL + '/js/explorer/popper.min.js'}"></script>
+<script th:src="${baseURL + '/js/explorer/bootstrap.min.js'}"></script>
+<script th:src="${baseURL + '/js/explorer/datatables.min.js'}"></script>
+<script th:src="${baseURL + '/js/explorer/common.js'}"></script>
+<script th:src="${baseURL + '/js/explorer/chainCodeHistoryVersion.js'}"></script>
+<script th:src="${baseURL + '/js/explorer/sweetalert.min.js'}"></script>
+</body>
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog"
+     aria-labelledby="uploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form class="needs-validation" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">新增智能合约</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="name" class="col-4 col-form-label"><span
+                                    style="color: red">*</span>合约名称：</label>
+                            <div class="col-8"><input placeholder="合约名称" type="text" class="form-control" id="name"
+                                                      required>
+                                <div class="invalid-feedback">
+                                    请输入合约名称
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="version" class="col-4 col-form-label"><span
+                                    style="color: red">*</span>合约版本：</label>
+                            <div class="col-8"><input type="text" placeholder="合约版本（1.0，2.0....n.0）"
+                                                      class="form-control" id="version" required>
+                                <div class="invalid-feedback">
+                                    请输入合约版本
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="language" class="col-4 col-form-label"><span
+                                    style="color: red">*</span>合约语言：</label>
+                            <div class="col-8"><select class="form-control" id="language">
+                                <option value="java" selected label="JAVA"/>
+                            </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="policy" class="col-4 col-form-label"><span
+                                    style="color: red">*</span>合约背书策略：</label>
+                            <div class="col-8"><input type="text" placeholder="合约版本（1.0，2.0....n.0）"
+                                                      class="form-control" id="policy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="file" class="col-4 col-form-label"><span style="color: red">*</span>合约文件（.zip）：</label>
+                            <div class="col-8"><input type="file" onchange="validFile()" class="form-control-file"
+                                                      id="file" required>
+                                <div class="invalid-feedback">
+                                    请选择合约文件
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-success">新增</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</html>

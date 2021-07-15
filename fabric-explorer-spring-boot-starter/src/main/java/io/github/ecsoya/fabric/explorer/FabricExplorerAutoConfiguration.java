@@ -2,6 +2,10 @@ package io.github.ecsoya.fabric.explorer;
 
 import javax.annotation.PostConstruct;
 
+import io.github.ecsoya.fabric.config.FabricContext;
+import io.github.ecsoya.fabric.explorer.service.ChainCodeService;
+import io.github.ecsoya.fabric.explorer.service.impl.ChainCodeServiceImpl;
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,7 @@ import io.github.ecsoya.fabric.explorer.controller.FabricExplorerController;
 @Configuration
 @ImportAutoConfiguration(classes = { SpringFabricGatewayAutoConfigure.class, MessageSourceAutoConfiguration.class })
 @EnableConfigurationProperties(FabricExplorerProperties.class)
+@MapperScan(basePackages = {"io.github.ecsoya.fabric.explorer.repository.mapper", "com.baomidou.springboot.mapper*"})
 public class FabricExplorerAutoConfiguration {
 
     /**
@@ -85,4 +90,18 @@ public class FabricExplorerAutoConfiguration {
 		return new FabricExplorerController();
 	}
 
+
+
+	/**
+	 * Chain code service chain code service.
+	 *
+	 * @param fabricContext the fabric context
+	 * @return the chain code service
+	 * @author XieXiongXiong
+	 * @date 2021 -07-13 14:35:03
+	 */
+	@Bean
+	public ChainCodeService chainCodeService(FabricContext fabricContext) {
+		return new ChainCodeServiceImpl(fabricContext);
+	}
 }

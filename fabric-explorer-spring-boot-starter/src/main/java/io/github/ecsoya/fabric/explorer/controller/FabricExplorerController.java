@@ -3,18 +3,15 @@ package io.github.ecsoya.fabric.explorer.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import ch.qos.logback.core.util.FileUtil;
-import com.google.gson.Gson;
 import io.github.ecsoya.fabric.FabricResponse;
-import io.github.ecsoya.fabric.service.ChainCodeService;
+import io.github.ecsoya.fabric.explorer.repository.entity.ChainCodeEntity;
+import io.github.ecsoya.fabric.explorer.service.ChainCodeService;
 import lombok.extern.slf4j.Slf4j;
-import org.hyperledger.fabric.sdk.TransactionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
@@ -245,13 +242,11 @@ public class FabricExplorerController {
 
 	@PostMapping("/chainCode/deploy")
 	@ResponseBody
-	public  FabricResponse deployCC(@RequestParam("file") MultipartFile file, String name, String version, String language) {
+	public  FabricResponse deployCC(@RequestParam("file") MultipartFile file, String name, String version, String language, @RequestParam(value = "policy",required = false) String policy) {
 		if(file.isEmpty()){
 			return FabricResponse.fail("请选择文件");
 		}
 		String fileName = file.getOriginalFilename();
-//		int size = (int) file.getSize();
-//		System.out.println(fileName + "-->" + size);
 		String realPath = null;
 		try {
 			String path = ResourceUtils.getURL("classpath:").getPath();
@@ -266,7 +261,8 @@ public class FabricExplorerController {
 		try {
 			file.transferTo(dest);
 			String savePath = FileUtils.unZip(dest.getAbsolutePath());
-            chainCodeService.deployChainCode(name,version,null,savePath,null);
+			Long nextSeq = chainCodeService.getChainCodeNextSeq(name);
+			chainCodeService.deployChainCode(name,version,policy,savePath,nextSeq,language);
 			return FabricResponse.ok();
 		} catch (Exception e) {
 			log.error("部署合约失败",e);
@@ -274,16 +270,46 @@ public class FabricExplorerController {
 			try {
 				org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory(new File(realPath));
 			} catch (IOException e) {
+				log.error("删除文件夹失败",e);
 			}
 		}
 		return FabricResponse.fail("新增智能合约失败");
 	}
 
-	private  static byte[] generatePackageMataDataBytes(String label, String path, TransactionRequest.Type type) {
-		if (path == null) {
-			path = "";
-		}
+	@GetMapping("chainCode")
+	@ResponseBody
+	public FabricPagination<List<ChainCodeEntity>> listChainCode(@RequestParam(value = "chainCodeName",required = false) String name, Integer currentPage, Integer pageSize){
+		List<ChainCodeEntity> entities = chainCodeService.getChainCode(name,currentPage,pageSize);
+		FabricPagination pagination = new FabricPagination();
+		pagination.setCurrentPage(currentPage);
+		pagination.setData(entities);
+		return pagination;
+	}
+    @GetMapping("chainCode/index")
+	public ModelAndView turnChainCodeIndex(HttpServletRequest request){
+		ModelAndView model = new ModelAndView("explorer/chainCode");
+		model.addAllObjects(properties.toMap());
+		model.addObject("baseURL", baseUrl(request));
+		return model;
+	}
 
-		return String.format("{\"path\":%s,\"type\":\"%s\",\"label\":%s}", (new Gson()).toJson(path), type.toPackageName(), (new Gson()).toJson(label)).getBytes(StandardCharsets.UTF_8);
+	@GetMapping("chainCode/historyVersion/index")
+	public ModelAndView historyVersion(HttpServletRequest request,String chainCodeName){
+		ModelAndView model = new ModelAndView("explorer/chainCodeHistoryVersion");
+		model.addAllObjects(properties.toMap());
+		model.addObject("baseURL", baseUrl(request));
+		model.addObject("chainCodeName",chainCodeName);
+		return model;
+	}
+
+	@GetMapping("chainCode/historyVersion")
+	@ResponseBody
+	public FabricPagination<List<ChainCodeEntity>> historyVersion(String chainCodeName, Integer currentPage, Integer pageSize){
+		List<ChainCodeEntity> entities = chainCodeService.getHistory(chainCodeName,currentPage,pageSize);
+
+		FabricPagination pagination = new FabricPagination();
+		pagination.setCurrentPage(currentPage);
+		pagination.setData(entities);
+		return pagination;
 	}
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.ecsoya.fabric.explorer.repository.mapper.ChainCodeMapper">
+    <select id="nextSeq" resultType="long">
+        select ifnull(max(chain_code_sequence),0) + 1 as nextSeq  from chain_code where chain_code_name = #{chainCodeName}
+    </select>
+
+    <select id="selectChainCodeEntities" resultType="io.github.ecsoya.fabric.explorer.repository.entity.ChainCodeEntity">
+       SELECT
+        *
+        FROM
+        chain_code a
+        JOIN ( SELECT max( chain_code_sequence ) AS last, chain_code_name FROM chain_code GROUP BY chain_code_name ) t ON t.chain_code_name = a.chain_code_name
+        AND t.last = a.chain_code_sequence
+        <where>
+            <if test="chainCodeName != null and chainCodeName != ''">
+            and t.chain_code_name like concat('%',#{chainCodeName},'%')
+            </if>
+        </where>
+        group by t.chain_code_name order by a.create_time desc
+        limit #{offset},#{size}
+    </select>
+
+    <select id="selectHistory" resultType="io.github.ecsoya.fabric.explorer.repository.entity.ChainCodeEntity">
+        select * from chain_code
+        <where>
+            <if test="chainCodeName != null and chainCodeName != ''">
+                and chain_code_name like concat('%',#{chainCodeName},'%')
+            </if>
+        </where>
+        order by create_time desc
+        limit #{offset},#{size}
+    </select>
+
+    <update id="offChainCode">
+        update chain_code set status = 0 where chain_code_name = #{chainCodeName} and status =1;
+    </update>
+</mapper>

@@ -33,16 +33,17 @@
                         th:src="${baseURL + '/' + logo}" width="40" height="40"
                         style="margin-right: 10px; margin-top: -6px;" alt=""
                         class="d-inline-block"> <label th:text="${title}"></label> </a>
-                <form class="form-inline" style="width: 40%;">
-                    <input type="search" th:placeholder="#{index.search.placeholder}"
-                           aria-label="Search" class="form-control mr-sm-2 col-sm-9"
-                           id="query">
-                    <button type="button" class="btn btn-outline-success my-2 my-sm-0"
-                            onclick="performSearch()" th:text="#{index.search}"></button>
-                </form>
-                <button type="button" class="btn btn-outline-success my-2 my-sm-0"
-                        data-toggle="modal" data-target="#uploadModal" th:text="#{chainCode.add}">
-                </button>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"  onclick="index()">概述</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"  onclick="turnChainCode()">智能合约</a>
+                    </li>
+                </ul>
+                <!--<button type="button" class="btn btn-outline-success my-2 my-sm-0" onclick="turnChainCode()"
+                        th:text="#{chainCode.manager}">
+                </button>-->
                 <a th:href="${hyperledgerExplorerUrl}"><img
                         th:src="${baseURL + '/img/explorer/hyperledger_explorer.svg'}" width="150" height="32"
                         th:alt="#{index.hyperledger.explorer.title}" data-toggle="tooltip"
@@ -56,12 +57,10 @@
             <nav class="breadcrumb-container"
                  style="margin-top: 10px; margin-bottom: -30px;">
                 <ol class="breadcrumb bg-white">
-                    <li class="breadcrumb-item"><a th:href="${baseURL + '/'}"><img
+                    <li class="breadcrumb-item"><a th:href="${baseURL + '/' + path + '/'}"><img
                             th:src="${baseURL + '/img/explorer/home.png'}" class="image" th:text="#{index.title}">
                     </a></li>
-                    <li class="breadcrumb-item active" aria-current="page"
-                        th:text="#{index.breadcrumb.blockchain}"></li>
-                    <li class="breadcrumb-item" th:text="#{index.breadcrumb.generic}"></li>
+                    <li class="breadcrumb-item active" th:text="#{index.breadcrumb.generic}"></li>
                 </ol>
             </nav>
             <div class="row">
@@ -88,7 +87,7 @@
 
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-4 b-right">
+                                <div class="col-sm-3 b-right">
                                     <div style="margin-bottom: 15px;">
                                         <h3 data-toggle="tooltip"
                                             th:title="#{index.network.peers.desc}" id="peerInfo">6</h3>
@@ -98,7 +97,7 @@
                                              th:text="#{index.network.peers}">
                                     </div>
                                 </div>
-                                <div class="col-sm-4 b-right">
+                                <div class="col-sm-3 b-right">
                                     <div style="margin-bottom: 15px;">
                                         <h3 data-toggle="tooltip" id="orgInfo">2</h3>
                                     </div>
@@ -108,7 +107,7 @@
                                     </div>
 
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-6">
                                     <div style="margin-bottom: 15px;">
                                         <h3 data-toggle="tooltip" id="commonInfo">common</h3>
                                     </div>
@@ -132,8 +131,8 @@
                                 <h3 data-toggle="tooltip" id="chaincodeInfo"></h3>
                             </div>
                             <div>
-                                <img th:src="${baseURL + '/img/explorer/smartcontract.png'}" class="image-sm">
-                                <label th:text="#{index.chaincode.name}"></label>
+                                <img th:src="${baseURL + '/img/explorer/smartcontract.png'}" class="image-sm"
+                                     th:text="#{index.chaincode.name}">
                             </div>
                         </div>
                     </div>
@@ -190,71 +189,4 @@
 <script th:src="${baseURL + '/js/explorer/index.js'}"></script>
 <script th:src="${baseURL + '/js/explorer/sweetalert.min.js'}"></script>
 </body>
-<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog"
-     aria-labelledby="uploadModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <form class="needs-validation" novalidate>
-                <div class="modal-header">
-                    <h5 class="modal-title" id="uploadModalLabel">新增智能合约</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="form-group">
-                        <div class="row">
-                            <label for="name" class="col-4 col-form-label"><span
-                                    style="color: red">*</span>合约名称：</label>
-                            <div class="col-8"><input placeholder="合约名称" type="text" class="form-control" id="name"
-                                                      required>
-                                <div class="invalid-feedback">
-                                    请输入合约名称
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label for="version" class="col-4 col-form-label"><span
-                                    style="color: red">*</span>合约版本：</label>
-                            <div class="col-8"><input type="text" placeholder="合约版本（1.0，2.0....n.0）"
-                                                      class="form-control" id="version" required>
-                                <div class="invalid-feedback">
-                                    请输入合约版本
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label for="language" class="col-4 col-form-label"><span
-                                    style="color: red">*</span>合约语言：</label>
-                            <div class="col-8"><select class="form-control" id="language">
-                                <option value="java" selected label="JAVA"/>
-                            </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label for="file" class="col-4 col-form-label"><span style="color: red">*</span>合约文件（.zip）：</label>
-                            <div class="col-8"><input type="file" onchange="validFile()" class="form-control-file"
-                                                      id="file" required>
-                                <div class="invalid-feedback">
-                                    请选择合约文件
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="submit" class="btn btn-success">新增</button>
-                </div>
-                </form>
-            </div>
-    </div>
-</div>
 </html>
