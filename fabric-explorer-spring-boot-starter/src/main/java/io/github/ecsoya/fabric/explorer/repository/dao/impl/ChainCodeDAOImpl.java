@@ -17,10 +17,9 @@ import java.util.List;
  * @author XieXiongXiong
  * @date 2021 -07-15
  */
-@Repository
 public class ChainCodeDAOImpl implements ChainCodeDAO {
     private final ChainCodeMapper chainCodeMapper;
-    @Autowired
+
     public ChainCodeDAOImpl(ChainCodeMapper chainCodeMapper) {
         this.chainCodeMapper = chainCodeMapper;
     }

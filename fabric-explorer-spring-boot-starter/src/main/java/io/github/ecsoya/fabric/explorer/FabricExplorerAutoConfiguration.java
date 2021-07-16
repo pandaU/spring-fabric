@@ -4,6 +4,8 @@ import javax.annotation.PostConstruct;
 
 import io.github.ecsoya.fabric.config.FabricContext;
 import io.github.ecsoya.fabric.explorer.repository.dao.ChainCodeDAO;
+import io.github.ecsoya.fabric.explorer.repository.dao.impl.ChainCodeDAOImpl;
+import io.github.ecsoya.fabric.explorer.repository.mapper.ChainCodeMapper;
 import io.github.ecsoya.fabric.explorer.service.ChainCodeService;
 import io.github.ecsoya.fabric.explorer.service.impl.ChainCodeServiceImpl;
 import org.mybatis.spring.annotation.MapperScan;
@@ -16,6 +18,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
 
 import io.github.ecsoya.fabric.boot.SpringFabricGatewayAutoConfigure;
@@ -78,6 +81,29 @@ public class FabricExplorerAutoConfiguration {
 		mapping.setOrder(Integer.MAX_VALUE - 3);
 		return mapping;
 	}
+	@Bean
+	public ChainCodeDAO chainCodeDAO(ChainCodeMapper chainCodeMapper) {
+		return new ChainCodeDAOImpl(chainCodeMapper);
+	}
+
+	@Bean
+	public ChainCodeService chainCodeService(FabricContext fabricContext, ChainCodeDAO chainCodeDAO) {
+		return new ChainCodeServiceImpl(fabricContext, chainCodeDAO);
+	}
+
+    /**
+     * Fabric explorer controller fabric explorer controller.
+     *
+     * @return the fabric explorer controller
+     * @author XieXiongXiong
+     * @date 2021 -07-07 11:38:23
+     */
+    @Bean
+	public FabricExplorerController fabricExplorerController() {
+		return new FabricExplorerController();
+	}
+
+
 
 
 }

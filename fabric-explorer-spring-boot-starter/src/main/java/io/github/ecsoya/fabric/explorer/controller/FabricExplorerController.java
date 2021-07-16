@@ -13,6 +13,7 @@ import io.github.ecsoya.fabric.explorer.repository.entity.ChainCodeEntity;
 import io.github.ecsoya.fabric.explorer.service.ChainCodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,6 @@ import io.github.ecsoya.fabric.utils.FileUtils;
  * @date 2021 -07-07
  */
 @Slf4j
-@Component
 public class FabricExplorerController {
 
 	/**
@@ -46,7 +46,6 @@ public class FabricExplorerController {
 	 */
 	@Autowired
 	private IFabricInfoService fabricService;
-
 	/**
 	 * Properties
 	 */

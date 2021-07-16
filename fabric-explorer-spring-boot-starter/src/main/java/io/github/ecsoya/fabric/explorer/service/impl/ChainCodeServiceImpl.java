@@ -33,13 +33,12 @@ import java.util.concurrent.TimeoutException;
  * @date 2021 -07-12
  */
 @Slf4j
-@Service
 public class ChainCodeServiceImpl implements ChainCodeService {
 
     private ChainCodeDAO chainCodeDAO;
 
     private Network network;
-    @Autowired
+
     public ChainCodeServiceImpl(FabricContext fabricContext, ChainCodeDAO chainCodeDAO) {
         this.network = fabricContext.getNetwork();
         this.chainCodeDAO = chainCodeDAO;
