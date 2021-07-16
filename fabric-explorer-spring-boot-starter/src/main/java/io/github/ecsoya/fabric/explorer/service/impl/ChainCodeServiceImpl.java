@@ -12,6 +12,7 @@ import org.hyperledger.fabric.sdk.exception.ChaincodeEndorsementPolicyParseExcep
 import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
 import org.hyperledger.fabric.sdk.exception.ProposalException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -32,14 +33,16 @@ import java.util.concurrent.TimeoutException;
  * @date 2021 -07-12
  */
 @Slf4j
+@Service
 public class ChainCodeServiceImpl implements ChainCodeService {
-    @Autowired
+
     private ChainCodeDAO chainCodeDAO;
 
     private Network network;
-
-    public ChainCodeServiceImpl(FabricContext fabricContext) {
+    @Autowired
+    public ChainCodeServiceImpl(FabricContext fabricContext, ChainCodeDAO chainCodeDAO) {
         this.network = fabricContext.getNetwork();
+        this.chainCodeDAO = chainCodeDAO;
     }
 
     @Override

@@ -3,6 +3,7 @@ package io.github.ecsoya.fabric.explorer;
 import javax.annotation.PostConstruct;
 
 import io.github.ecsoya.fabric.config.FabricContext;
+import io.github.ecsoya.fabric.explorer.repository.dao.ChainCodeDAO;
 import io.github.ecsoya.fabric.explorer.service.ChainCodeService;
 import io.github.ecsoya.fabric.explorer.service.impl.ChainCodeServiceImpl;
 import org.mybatis.spring.annotation.MapperScan;
@@ -78,30 +79,5 @@ public class FabricExplorerAutoConfiguration {
 		return mapping;
 	}
 
-    /**
-     * Fabric explorer controller fabric explorer controller.
-     *
-     * @return the fabric explorer controller
-     * @author XieXiongXiong
-     * @date 2021 -07-07 11:38:23
-     */
-    @Bean
-	public FabricExplorerController fabricExplorerController() {
-		return new FabricExplorerController();
-	}
 
-
-
-	/**
-	 * Chain code service chain code service.
-	 *
-	 * @param fabricContext the fabric context
-	 * @return the chain code service
-	 * @author XieXiongXiong
-	 * @date 2021 -07-13 14:35:03
-	 */
-	@Bean
-	public ChainCodeService chainCodeService(FabricContext fabricContext) {
-		return new ChainCodeServiceImpl(fabricContext);
-	}
 }
