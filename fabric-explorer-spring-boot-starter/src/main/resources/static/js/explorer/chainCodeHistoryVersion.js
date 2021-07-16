@@ -7,6 +7,8 @@ $(document).ready(function() {
     initDataTable();
 
     loadMore();
+
+    $('[data-toggle="tooltip"]').tooltip();
 });
 
 function initDataTable() {
@@ -61,7 +63,10 @@ function initDataTable() {
                 {
                     "name" : "chainCodePackageId",
                     "data" : function(row) {
-                        return row.chainCodePackageId;
+                        return '<div data-toggle="tooltip" data-placement="right" title="'
+                            + row.chainCodePackageId + '">'
+                            + row.chainCodePackageId.substr(0,20)
+                            + '</div>';
                     }
                 },
                 {
@@ -73,7 +78,7 @@ function initDataTable() {
                 {
                     "name" : "op",
                     "data" : function(row) {
-                        return row.status === 1 ? "运行中" : "已下线"
+                        return row.status === 1 ? "<span style='color: green'>运行中</span>" : "<span style='color: black'>已下线</span>"
                     }
                 }]
         });

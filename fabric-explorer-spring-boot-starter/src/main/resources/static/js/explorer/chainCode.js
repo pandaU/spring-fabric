@@ -2,11 +2,14 @@ const basePath = $('#baseURL').val() + '/' + $('#path').val() + '/';
 
 const viewTitle = $('#viewTitle').val();
 const loading = $('#loading').val();
+
 $(document).ready(function() {
 
     initDataTable();
 
     loadMore();
+
+    $('[data-toggle="tooltip"]').tooltip();
 });
 
 function initDataTable() {
@@ -61,7 +64,10 @@ function initDataTable() {
                 {
                     "name" : "chainCodePackageId",
                     "data" : function(row) {
-                        return row.chainCodePackageId;
+                        return '<div data-toggle="tooltip" data-placement="right" title="'
+                            + row.chainCodePackageId + '">'
+                            + row.chainCodePackageId.substr(0,20)
+                            + '</div>';
                     }
                 },
                 {
